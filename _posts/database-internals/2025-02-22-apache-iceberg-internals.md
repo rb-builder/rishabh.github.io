@@ -114,11 +114,71 @@ and shown here as separate block just for explaining.
 └──────────────────────────────────┘
 
 ````
-### Examples of how iceberg metadata store evolve with new write operations
-For every write a new snapshot is created. This means a new manifest list is created which reference multiple manifest
-files (old and/or new). The newly created manifest list is then added to new metadata file.
+### Understanding how iceberg metadata store evolve with new write operations
+For every write operation in an Apache Iceberg table, a **new snapshot** is created. This process starts with 
+generating new data files and updating or adding manifest files that track these changes. A **new manifest list**
+is then created, referencing both newly added manifest files and existing ones that remain unchanged. This ensures 
+efficient tracking of table modifications without rewriting unchanged metadata. Once the manifest list is prepared, 
+Iceberg records it as part of the new snapshot, assigning it a unique snapshot ID. Finally, a **new table metadata 
+file** (metadata.json) is written, pointing to the latest snapshot, making it the current state of the table while 
+preserving all previous snapshots for **time travel and rollback capabilities**.
 
+### How does the catalog manages the latest metadata file ?
+
+
+### Different types of writes
+
+Iceberg supports two different types of writes -
+1. Copy on write - Whole data file is re-written on row mutation. Optimized for reads. 
+2. Merge On read - Manages logs of mutated data and merge operation happens on read. There are two types here - position 
+deletes and equality deletes. The idea behind the MOR is for row level updates/deletes to only add new data and not 
+rewrite anything. Optimized for storage and writes.
+
+To understand how write impacts the metadata store we will run the following queries on an empty table 
+and see how the metadata store evolves-
+
+```
+INSERT INTO my_iceberg_table (name, team)
+VALUES
+('Steve', 'product'),
+('Elon', 'engineering'),
+('Jeff', 'business');
+
+INSERT INTO my_iceberg_table (name, team)
+VALUES
+('Warren', 'account');
+
+UPDATE my_iceberg_table
+SET team = 'innovator' WHERE name = 'Jeff';
+
+UPDATE my_iceberg_table
+SET team = 'space' WHERE name = 'Elon';
+
+DELETE FROM my_iceberg_table
+WHERE name = 'Steve';
+```
+### Copy On Write
+In this any data mutation (update or delete ) on a row cause the whole data file to be rewritten. Before going to
+above queries lets see a simplified version
+
+
+
+#### Metadata store evolution on COW
+![ Iceberg COW Example ](/assets/apache%20iceberg/ApacheIceberg-Iceberg%20table%20Write%20COW.drawio.png)
+
+### Merge On Read
+
+#### Metadata store evolution on MOR
+Note: For simplification I have not represented metadata file but only new snapshots created for every write. 
+![ Iceberg MOR Example ](/assets/apache%20iceberg/ApacheIceberg-Iceberg%20table%20Write%20MOR.drawio.png)
+
+
+### Merge On Read
 
 ## Apache Iceberg Internal Working - Protocol
 
 
+
+
+## References
+- 
