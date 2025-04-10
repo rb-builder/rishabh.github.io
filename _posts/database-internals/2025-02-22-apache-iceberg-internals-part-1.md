@@ -349,6 +349,18 @@ and [MergeAppend](https://github.com/apache/iceberg/blob/main/core/src/main/java
 
 ![ Iceberg Simplified Protocol ](/assets/apache%20iceberg/ApacheIceberg-Protocol.drawio.png)
 
+**Simplified Iceberg Write control flow.**
+
+Interesting point to see here  -
+- Data conflict check happens before trying to commit. Is the data conflict is detected early it does not even try to 
+commit.
+- Commit to catalog uses compare and swap technique. It tries to compare the current snapshot id (acquire lock if 
+required) and commit with new updated snapshot id. If commit results in conflict it tries to regenerate the manifest
+without retrying to rewrite the data files.
+
+![ Iceberg Simplified Protocol ](/assets/apache%20iceberg/ApacheIceberg-Write%20Control%20Flow.drawio.png)
+
+
 ## Appendix
 
 **In dept analysis of Iceberg Write control flow.**
