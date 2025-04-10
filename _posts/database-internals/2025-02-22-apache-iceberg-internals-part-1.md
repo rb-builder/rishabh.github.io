@@ -358,7 +358,7 @@ commit.
 required) and commit with new updated snapshot id. If commit results in conflict it tries to regenerate the manifest
 without retrying to rewrite the data files.
 
-![ Iceberg Simplified Protocol ](/assets/apache%20iceberg/ApacheIceberg-Write%20Control%20Flow.drawio.png)
+![ Iceberg Simplified Protocol ](/assets/apache%20iceberg/ApacheIceberg-Simplified%20Write%20Control%20Flow.drawio.png)
 
 
 ## Appendix
