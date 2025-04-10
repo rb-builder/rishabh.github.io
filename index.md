@@ -1,5 +1,7 @@
 ---
 layout: home
+author: Rishabh Bhatia
+tags: distributed systems database internals relentless leader
 ---
 
 Hi, I'm Rishabh! I'm a relentless leader at Amazon, living in Seattle.
