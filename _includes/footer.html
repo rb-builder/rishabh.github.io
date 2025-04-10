@@ -1,0 +1,28 @@
+<footer class="site-footer h-card">
+    <data class="u-url" href="{{ "/" | relative_url }}"></data>
+
+    <div class="wrapper">
+
+
+        <div class="footer-col-wrapper">
+            <div class="footer-col footer-col-1">
+
+                {%- include social.html -%}
+                <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | relative_url }}">via RSS</a></p>
+            </div>
+
+            <div class="footer-col footer-col-2">
+                <p>
+                    <a href="https://{{ site.license_url }}">
+                        <img src="https://{{ site.license_image }}" alt="{{ site.license }}">
+                    </a>
+                    <br>
+                    Licensed under {{ site.license }}
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+
+</footer>
