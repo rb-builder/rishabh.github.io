@@ -344,29 +344,10 @@ and [MergeAppend](https://github.com/apache/iceberg/blob/main/core/src/main/java
 - Interface - [here](https://github.com/apache/iceberg/blob/main/api/src/main/java/org/apache/iceberg/RewriteFiles.java)
 - Implementation - [BaseRewriteFiles](https://github.com/apache/iceberg/blob/main/core/src/main/java/org/apache/iceberg/BaseRewriteFiles.java)
 
-** NOTE ** - I will go deeper into the validations and data conflict checks in next blog. 
+**NOTE** - I will go deeper into the validations and data conflict checks in upcoming blogs. 
 
 
-** Here to close on this blog I am adding Simplified version of write control flow **
-
-To understand the Iceberg write path, I followed the SparkWrite class, which triggers all these operations for 
-Apache Spark.
-```
-private class BatchAppend extends BaseBatchWrite {
-    @Override
-    public void commit(WriterCommitMessage[] messages) {
-      AppendFiles append = table.newAppend();
-
-      int numFiles = 0;
-      for (DataFile file : files(messages)) {
-        numFiles += 1;
-        append.appendFile(file);
-      }
-
-      commitOperation(append, String.format("append with %d new data files", numFiles));
-    }
-  }
-```
+![ Iceberg Simplified Protocol ](/assets/apache%20iceberg/ApacheIceberg-Protocol.drawio.png)
 
 
 ### Upcoming Blogs will talk about
@@ -374,6 +355,19 @@ private class BatchAppend extends BaseBatchWrite {
 - How Apache Iceberg handle data conflicts ( essential for consistency ) ?
 - How Apache Iceberg improves performance?
 
+## Reference
+- [Iceberg Code Base](https://github.com/apache/iceberg) for understanding iceberg protocol
+- [Iceberg Official docs](https://iceberg.apache.org/terms/) for understanding iceberg specification
+- [Apache Iceberg The Definitive Guide](https://www.dremio.com/wp-content/uploads/2023/02/apache-iceberg-TDG_ER1.pdf) for highly understanding for Iceberg.
 
-## References
-- 
+## Appendix
+
+**NOTE** - I will go deeper and will explain it in details in upcoming blogs.
+
+**In dept analysis of Iceberg Write control flow.**
+
+![ Iceberg Write Control Flow ](/assets/apache%20iceberg/ApacheIceberg-Write%20Control%20Flow.drawio.png)
+
+
+If you are interested to dive further down the rabbit hole, good way to start is from compute engine adapter module. I
+started from Apache Spark module, specifically [SparkWrite Class](https://github.com/apache/iceberg/blob/main/spark/v3.5/spark/src/main/java/org/apache/iceberg/spark/source/SparkWrite.java).
