@@ -2,7 +2,7 @@
 title: "Introduction To Distributed Systems"
 author: Rishabh Bhatia
 categories: [distributed-systems]
-tags: ["distributed systems", "swe", "basics", "academic", "software engineering", "design", "formal reasoning"]
+tags: distributed systems swe basics academic software engineering design formal reasoning
 date: 2025-02-15 10:00:00 -0700
 ---
 

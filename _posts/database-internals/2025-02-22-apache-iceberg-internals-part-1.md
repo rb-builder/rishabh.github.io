@@ -2,7 +2,7 @@
 title: "Apache Iceberg Internals Part 1 - Metadata Evolution"
 author: Rishabh Bhatia
 categories: [database-internals]
-tags: ["distributed systems", "database internals", "swe", "dive deep", "academic", "software engineering", "design", "Apache Iceberg", "internals"]
+tags: distributed systems database internals swe dive deep academic software engineering design iceberg architecture
 date: 2025-02-22 10:00:00 -0700
 ---
 
