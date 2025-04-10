@@ -123,18 +123,29 @@ Iceberg records it as part of the new snapshot, assigning it a unique snapshot I
 file** (metadata.json) is written, pointing to the latest snapshot, making it the current state of the table while 
 preserving all previous snapshots for **time travel and rollback capabilities**.
 
-### How does the catalog manages the latest metadata file ?
+### Understanding Apache Iceberg Table Formats: Merge-on-Read (MoR) vs Copy-on-Write (CoW)
+
+Iceberg supports two write approaches -
+1. Copy on write
+2. Merge On read 
+
+### Copy On Write
+In Copy-on-Write (CoW), when a row is updated or deleted, instead of modifying the original data file, a new data file 
+is created containing the modified records while preserving the original file. This approach ensures data consistency 
+and enables time travel capabilities by maintaining previous versions of the data.
+
+Pros
+- Optimized for read heavy workloads. The data is in final state and there is no work of merging data at query time.
+
+Cons
+- Not efficient for frequent updates/deletes.
+- Higher storage cost due to complete file rewrites.
+
+![ Iceberg COW Simplified Example ](/assets/apache%20iceberg/ApacheIceberg-Iceberg%20table%20Write%20COW%20Simplified%20Example.drawio.png)
 
 
-### Different types of writes
-
-Iceberg supports two different types of writes -
-1. Copy on write - Whole data file is re-written on row mutation. Optimized for reads. 
-2. Merge On read - Manages logs of mutated data and merge operation happens on read. There are two types here - position 
-deletes and equality deletes. The idea behind the MOR is for row level updates/deletes to only add new data and not 
-rewrite anything. Optimized for storage and writes.
-
-To understand how write impacts the metadata store we will run the following queries on an empty table 
+### Detailed Example for Metadata store evolution During COW
+To understand how write impacts the metadata store we will run the following queries on an empty table
 and see how the metadata store evolves-
 
 ```
@@ -157,19 +168,60 @@ SET team = 'space' WHERE name = 'Elon';
 DELETE FROM my_iceberg_table
 WHERE name = 'Steve';
 ```
-### Copy On Write
-In this any data mutation (update or delete ) on a row cause the whole data file to be rewritten. Before going to
-above queries lets see a simplified version
 
-
-
-#### Metadata store evolution on COW
 ![ Iceberg COW Example ](/assets/apache%20iceberg/ApacheIceberg-Iceberg%20table%20Write%20COW.drawio.png)
 
 ### Merge On Read
+In Merge-on-Read (MoR), when data is modified (updated or deleted), the changes are initially recorded in delta files
+rather than creating new base data files immediately. These delta files store the modifications separately until a 
+compaction operation merges them with the base files. This approach optimizes write performance by deferring the 
+expensive merge operations while maintaining data consistency. 
 
-#### Metadata store evolution on MOR
+Iceberg supports two types of delete operations in MoR tables - Positional deletes and Equality deletes.
+
+Positional deletes in MoR work by maintaining position-based references to the records that need to be deleted. 
+These delete files store the file and position information of the records to be removed, rather than the actual record
+data. During read operations, these positional delete files are used to filter out the deleted records from the base 
+data files.
+
+![ Iceberg MOR Simplified Positional Delete Example ](/assets/apache%20iceberg/ApacheIceberg-Iceberg%20table%20Write%20MOR%20Position%20Deletes%20Simplified%20Example.drawio.png)
+
+Equality deletes in MoR operate by storing the equality conditions that identify which records should be deleted. 
+Instead of tracking positions, these delete files contain the values of specific columns that match the records to be
+removed. When reading data, the system applies these equality conditions to filter out deleted records, making it
+particularly useful for scenarios where multiple records might match the delete criteria.
+
+![ Iceberg MOR Simplified Equality Delete Example ](/assets/apache%20iceberg/ApacheIceberg-Iceberg%20table%20Write%20MOR%20Equality%20Deletes%20Simplified%20Example.drawio.png)
+
+
+### Detailed Example for Metadata store evolution During MOR - Positional Deletes
+
+Will reuse the same queries and understand how the metadata store evolve with MOR.
+
+```
+INSERT INTO my_iceberg_table (name, team)
+VALUES
+('Steve', 'product'),
+('Elon', 'engineering'),
+('Jeff', 'business');
+
+INSERT INTO my_iceberg_table (name, team)
+VALUES
+('Warren', 'account');
+
+UPDATE my_iceberg_table
+SET team = 'innovator' WHERE name = 'Jeff';
+
+UPDATE my_iceberg_table
+SET team = 'space' WHERE name = 'Elon';
+
+DELETE FROM my_iceberg_table
+WHERE name = 'Steve';
+```
+
 Note: For simplification I have not represented metadata file but only new snapshots created for every write. 
+
+
 ![ Iceberg MOR Example ](/assets/apache%20iceberg/ApacheIceberg-Iceberg%20table%20Write%20MOR.drawio.png)
 
 
