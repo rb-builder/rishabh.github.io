@@ -6,9 +6,11 @@ tags: distributed systems database internals swe dive deep academic software eng
 date: 2025-02-22 10:00:00 -0700
 ---
 
-This is first part of iceberg series where I dive deep into the internal workings of Apache Iceberg. In this blog we
-will understand the architecture/specification of iceberg table format. We will go over different iceberg write formats
-such as Merge On Read, Copy On Write with detailed examples.
+This is first part of iceberg series where I dive deep into Apache Iceberg internals. In this blog I will explain the
+architecture, specifications and protocols of Apache Iceberg in great details. I will go over the internal working, high
+level design, metadata evolution with examples for different write modes Apache Iceberg support Merge On Read, and 
+Copy On Write. I will also go over the control flow / low level design of Apache Iceberg write path in both simplified
+and detailed version. I will also touch upon compaction and consistency handling of Apache Iceberg. 
 
 ## Prerequisite
 This blog is useful to you if you have basic understanding of table formats, data warehouses and data lakes.
