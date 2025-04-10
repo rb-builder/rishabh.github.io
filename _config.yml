@@ -8,10 +8,9 @@ header_pages:
   - all-posts.html
   - distributed-systems.html
 
-footer:
-  license: "CC BY-NC-ND 4.0"
-  license_url: "creativecommons.org/licenses/by-nc-nd/4.0/"
-  license_image: "i.creativecommons.org/l/by-nc-nd/4.0/88x31.png"
+license: "CC BY-NC-ND 4.0"
+license_url: "creativecommons.org/licenses/by-nc-nd/4.0/"
+license_image: "i.creativecommons.org/l/by-nc-nd/4.0/88x31.png"
 
 linkedin_username: relentless-leader
 github_username: relentless-leader
