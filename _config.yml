@@ -4,6 +4,11 @@ theme: minima
 
 google_analytics: G-CJMG9DTHXR
 
+description: >-
+  Relentless Leader's Blog
+
+url: "https://relentless-leader.com/"
+
 header_pages:
   - all-posts.html
   - distributed-systems.html
@@ -14,6 +19,7 @@ license_url: "creativecommons.org/licenses/by-nc-nd/4.0/"
 linkedin_username: relentless-leader
 github_username: relentless-leader
 twitter_username: RishabhBhatia_
+email: bhatiarishabh63@gmail.com
 
 show_excerpts: true
 excerpt_separator: <!--more-->
