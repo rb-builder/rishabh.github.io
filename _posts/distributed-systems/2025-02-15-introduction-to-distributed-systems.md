@@ -5,6 +5,9 @@ tags: [distributed-systems, swe, basics, academic, software-engineering, design,
 date: 2025-02-15 10:00:00 -0700
 ---
 
+This blog contains the introduction of distributed systems essential for someone just starting up in the journey of
+distributed systems.
+
 ## What is distributed systems?
 Dictionary definition of "Distributed" is shared or spread out and for "Systems" is a set of things working together 
 as parts of a mechanism. A "Distributed System" is how a collection of computers working together to perform the
