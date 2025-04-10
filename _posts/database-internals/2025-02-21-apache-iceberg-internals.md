@@ -3,7 +3,7 @@ title: "Apache Iceberg Internals"
 author: Rishabh Bhatia
 categories: [database-internals]
 tags: distributed systems database internals swe dive deep academic software engineering design iceberg architecture
-date: 2025-02-22 10:00:00 -0700
+date: 2025-02-21 10:00:00 -0700
 ---
 
 This blog dives deep into the internal workings of Apache Iceberg.
