@@ -347,3 +347,4 @@ Poor data layout leads to inefficient scans, especially for multi-column queries
 - [Iceberg Code Base](https://github.com/apache/iceberg) for understanding iceberg protocol
 - [Iceberg Official docs](https://iceberg.apache.org/terms/) for understanding iceberg specification
 - [Apache Iceberg The Definitive Guide](https://www.dremio.com/wp-content/uploads/2023/02/apache-iceberg-TDG_ER1.pdf) for highly understanding for Iceberg.
+
