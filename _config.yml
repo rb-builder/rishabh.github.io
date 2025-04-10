@@ -1,5 +1,6 @@
 # Build settings
 title: Relentless Leader
+permalink: /:title.html
 theme: minima
 
 # Minima settings
