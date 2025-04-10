@@ -12,6 +12,7 @@ url: "https://relentless-leader.com/"
 header_pages:
   - all-posts.html
   - distributed-systems.html
+  - database-internals.html
 
 license: "CC BY-NC-ND 4.0"
 license_url: "creativecommons.org/licenses/by-nc-nd/4.0/"
