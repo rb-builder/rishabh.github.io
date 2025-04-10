@@ -1,5 +1,5 @@
 ---
-title: "Apache Iceberg Internals"
+title: "Apache Iceberg Internals - Part 1"
 author: Rishabh Bhatia
 categories: [database-internals]
 tags: distributed systems database internals swe dive deep academic software engineering design iceberg architecture
