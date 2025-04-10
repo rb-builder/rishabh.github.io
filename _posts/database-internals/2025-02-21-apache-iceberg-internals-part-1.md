@@ -225,11 +225,9 @@ Note: For simplification I have not represented metadata file but only new snaps
 ![ Iceberg MOR Example ](/assets/apache%20iceberg/ApacheIceberg-Iceberg%20table%20Write%20MOR.drawio.png)
 
 
-### Merge On Read
-
-## Apache Iceberg Internal Working - Protocol
-
-
+### Up Next
+- How Apache Iceberg does compaction ?
+- How Apache Iceberg handle data conflicts ?
 
 
 ## References
