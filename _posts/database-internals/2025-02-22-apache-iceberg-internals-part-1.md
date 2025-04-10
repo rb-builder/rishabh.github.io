@@ -29,28 +29,28 @@ Apache Iceberg is a table format specification that provides a high-level abstra
 tables. Here's a breakdown of its core components:
 
 1. Catalog:
-- Acts as an entry point to locate tables 
-- Points to the latest metadata file in the metadata store 
-- Helps track the current state of tables
+- Acts as an entry point to locate tables.
+- Points to the latest metadata file in the metadata store. 
+- Helps track the current state of tables.
 
 2. Metadata Store:
-- Maintains a history of table snapshots
-- Tracks metadata files that reference the actual data
-- Provides centralized management of table state
-- Keeps track of schema evolution, partitioning changes, and other table properties
+- Maintains a history of table snapshots.
+- Tracks metadata files that reference the actual data.
+- Provides centralized management of table state.
+- Keeps track of schema evolution, partitioning changes, and other table properties.
 
 3. Data Store:
-- Contains the actual data files 
-- Stores table contents in file formats like Parquet, ORC, or Avro 
-- Can be located in cloud storage (S3, Azure Blob) or local filesystems
+- Contains the actual data files.
+- Stores table contents in file formats like Parquet, ORC, or Avro. 
+- Can be located in cloud storage (S3, Azure Blob) or local filesystems.
 
 The key benefit of Iceberg is that it abstracts away the complexity of managing these components. While users interact
 with what appears to be a single table, the Iceberg library handles:
-- File management 
-- Metadata tracking 
-- Table name management 
-- Version control of data 
-- Schema evolution
+- File management.
+- Metadata tracking. 
+- Table name management. 
+- Version control of data. 
+- Schema evolution.
 
 The Iceberg specification standardizes how these elements are represented and stored, while the library provides APIs
 to interact with and manipulate these components in a consistent way.
@@ -318,7 +318,55 @@ The goal with compaction is
 Will go in more details in next blog.
 
 ### Control Flow Of Writes.
+Above I tried to explain the table specifications defined by Iceberg. For understanding Iceberg protocol we will have
+to understand how the Iceberg library works. Iceberg provides a set of APIs that need to be implemented by different 
+compute engine -
+1. AppendFiles
+- For simply adding new files ( INSERT INTO operations).
+- Interface - [here](https://github.com/apache/iceberg/blob/main/api/src/main/java/org/apache/iceberg/AppendFiles.java)
+- Implementation - [FastAppend](https://github.com/apache/iceberg/blob/main/core/src/main/java/org/apache/iceberg/FastAppend.java) 
+and [MergeAppend](https://github.com/apache/iceberg/blob/main/core/src/main/java/org/apache/iceberg/MergeAppend.java)
+  - As name suggest FastAppend simply adds a new manifest files to the metadata files (log of snapshots) while 
+   MergeAppend adds new manifest file and merge existing manifest files to reduce number of manifest files in check.
 
+2. OverwriteFiles
+- For copy on write operations that performs row level changes (UPDATE, MERGE, DELETE).
+- Interface - [here](https://github.com/apache/iceberg/blob/main/api/src/main/java/org/apache/iceberg/OverwriteFiles.java)
+- Implementation - [BaseOverwriteFiles](https://github.com/apache/iceberg/blob/main/core/src/main/java/org/apache/iceberg/BaseOverwriteFiles.java)
+
+3. RowDelta
+- For read on merge operations that performs row level changes (UPDATE, MERGE, DELETE).
+- Interface - [here](https://github.com/apache/iceberg/blob/main/api/src/main/java/org/apache/iceberg/RowDelta.java)
+- Implementation - [BaseRowDelta](https://github.com/apache/iceberg/blob/main/core/src/main/java/org/apache/iceberg/BaseRowDelta.java)
+
+4. RewriteFiles
+- For Compaction.
+- Interface - [here](https://github.com/apache/iceberg/blob/main/api/src/main/java/org/apache/iceberg/RewriteFiles.java)
+- Implementation - [BaseRewriteFiles](https://github.com/apache/iceberg/blob/main/core/src/main/java/org/apache/iceberg/BaseRewriteFiles.java)
+
+** NOTE ** - I will go deeper into the validations and data conflict checks in next blog. 
+
+
+** Here to close on this blog I am adding Simplified version of write control flow **
+
+To understand the Iceberg write path, I followed the SparkWrite class, which triggers all these operations for 
+Apache Spark.
+```
+private class BatchAppend extends BaseBatchWrite {
+    @Override
+    public void commit(WriterCommitMessage[] messages) {
+      AppendFiles append = table.newAppend();
+
+      int numFiles = 0;
+      for (DataFile file : files(messages)) {
+        numFiles += 1;
+        append.appendFile(file);
+      }
+
+      commitOperation(append, String.format("append with %d new data files", numFiles));
+    }
+  }
+```
 
 
 ### Upcoming Blogs will talk about
