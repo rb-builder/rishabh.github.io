@@ -87,7 +87,7 @@ In upcoming blog I will talk about:
 - Invariant based thinking.
 
 ## References
-1. https://scholar.harvard.edu/files/waldo/files/waldo-94.pdf
-2. https://www.somethingsimilar.com/2013/01/14/notes-on-distributed-systems-for-young-bloods/
-3. https://queue.acm.org/detail.cfm?id=2953944
-4. https://lamport.azurewebsites.net/tla/formal-methods-amazon.pdf
+1. [A Note on Distributed Computing](https://scholar.harvard.edu/files/waldo/files/waldo-94.pdf)
+2. [Notes on Distributed Systems for Young Bloods](https://www.somethingsimilar.com/2013/01/14/notes-on-distributed-systems-for-young-bloods/)
+3. [Standing on Distributed Shoulders of Giants](https://queue.acm.org/detail.cfm?id=2953944)
+4. [Use of Formal Methods at Amazon Web Services](https://lamport.azurewebsites.net/tla/formal-methods-amazon.pdf)
