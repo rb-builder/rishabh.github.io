@@ -11,7 +11,7 @@ will understand the architecture/specification of iceberg table format. We will 
 such as Merge On Read, Copy On Write with detailed examples.
 
 ## Prerequisite
-This blog is useful to you if you have basic understanding of table formats, and data lakes.
+This blog is useful to you if you have basic understanding of table formats, data warehouses and data lakes.
 
 ## What is Apache Iceberg?
 Apache Iceberg is an open table format that provides a set of APIs for managing large analytic datasets. It was
@@ -302,6 +302,23 @@ WHERE name = 'Steve';
 Note: For simplification I have not represented metadata file but only new snapshots created for every write.
 
 ![ Iceberg MOR Example ](/assets/apache%20iceberg/ApacheIceberg-Iceberg%20table%20Write%20MOR.drawio.png)
+
+### Compaction
+
+As you can see with MOR or COW, the number of manifest and data files will implode even with scale. As every write 
+operate generates new snapshot. The performance will also take a hit as query engine will need to read many small files.
+
+To mitigate this side effect, there are various Compaction capabilities to rewrite many small files into few large 
+files. There are two types of compactions : data compaction and manifest compaction.
+
+The goal with compaction is 
+1. Reducing number of files - For MOR you can compact by applying the merge operation on the data.
+2. Improving the data locality - Essentially you have the freedom to sort it, or repartition it as per your use-case.
+
+Will go in more details in next blog.
+
+### Control Flow Of Writes.
+
 
 
 ### Upcoming Blogs will talk about
