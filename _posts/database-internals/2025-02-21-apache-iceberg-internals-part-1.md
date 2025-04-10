@@ -1,15 +1,17 @@
 ---
-title: "Apache Iceberg Internals - Part 1"
+title: "Apache Iceberg Internals Part 1 - Metadata Evolution"
 author: Rishabh Bhatia
 categories: [database-internals]
 tags: distributed systems database internals swe dive deep academic software engineering design iceberg architecture
 date: 2025-02-21 10:00:00 -0700
 ---
 
-This blog dives deep into the internal workings of Apache Iceberg.
+This is first part of iceberg series where I dive deep into the internal workings of Apache Iceberg. In this blog we
+will understand the architecture/specification of iceberg table format. We will go over different iceberg write formats
+such as Merge On Read, Copy On Write with detailed examples.
 
 ## Prerequisite
-This blog is useful to you if you understand table formats, data warehouses, and data lakes.
+This blog is useful to you if you have basic understanding of table formats, and data lakes.
 
 ## What is Apache Iceberg?
 Apache Iceberg is an open table format that provides a set of APIs for managing large analytic datasets. It was
@@ -23,38 +25,115 @@ by facebook in 2009). Iceberg was originally built with several goals -
 
 
 ## Apache Iceberg High Level Design - Table Specification
-Apache Iceberg is a specification with set of libraries supporting it. It gives you the illusion of managing single 
-table, behind the scenes the library is responsible for managing the metadata such as tracking table names, data files. 
-The specification standardizes the representation of the table in metadata and data files. The Iceberg library defines
-and implements the protocol (via APIs) for manipulating these files.
+Apache Iceberg is a table format specification that provides a high-level abstraction for managing large analytical
+tables. Here's a breakdown of its core components:
 
-Apache Iceberg as any other table format has catalog, metadata store, data store.
-- catalog - Pointing to the latest metadata file in metadata store.
-- metadata store - Manages a log of snapshots which references the data files, providing a centralized way to track the
-table's state and history.
-- data store - Contains data.
+1. Catalog:
+- Acts as an entry point to locate tables 
+- Points to the latest metadata file in the metadata store 
+- Helps track the current state of tables
+
+2. Metadata Store:
+- Maintains a history of table snapshots
+- Tracks metadata files that reference the actual data
+- Provides centralized management of table state
+- Keeps track of schema evolution, partitioning changes, and other table properties
+
+3. Data Store:
+- Contains the actual data files 
+- Stores table contents in file formats like Parquet, ORC, or Avro 
+- Can be located in cloud storage (S3, Azure Blob) or local filesystems
+
+The key benefit of Iceberg is that it abstracts away the complexity of managing these components. While users interact
+with what appears to be a single table, the Iceberg library handles:
+- File management 
+- Metadata tracking 
+- Table name management 
+- Version control of data 
+- Schema evolution
+
+The Iceberg specification standardizes how these elements are represented and stored, while the library provides APIs
+to interact with and manipulate these components in a consistent way.
 
 ![ Table Format High Level View ](/assets/apache%20iceberg/TableFormat%20High%20Level%20View.png)
 
-As represented in above simplified view of iceberg, data is visible to user through catalog. In Iceberg writer 
-1. writes the data to storage, 
-2. validates for conflicts against the metadata file, 
-3. creates the new snapshot in metadata files.
-4. commit the new snapshot to the catalog.
+As represented in above simplified view of iceberg, data is visible to user through catalog. 
 
-Post the commit to catalog, the new data is visible to readers. This means readers are isolated from concurrent writes
-to the data layer ( serializable isolation ).
+1. Write Path:
+-  Writer first writes new data files to storage 
+- Creates new metadata files with updated file manifests 
+- Validates for conflicts with existing metadata 
+- Commits the new snapshot to the catalog atomically
 
-### Iceberg Table Specification
+2. Read Path:
+- Readers only see data through the catalog 
+- Catalog points to the latest committed metadata file 
+- Metadata file contains references to valid data files 
+- This ensures readers only see consistent, committed data
+
+**Important Point** : This means readers are isolated from concurrent writes to the data layer.
+
+This design choice of Iceberg has been very useful in achieving complex goals
+1. **Serializable Isolation** - Since writers never modify existing data files (immutable files). New data is invisible 
+until the commit is complete. This results in readers continue using their current snapshot during writes. No partial
+or uncommitted data is ever visible to readers
+2. **Concurrency Control** - Concurrent writes results in conflicts. With isolation of writes makes it easy to detect
+conflicts using the metadata layer over using the data layer. The Conflict detection happens at commit time, and only 
+one writer  can successfully commit at a time. Failed commits will be retried, and don't affect readers or data 
+consistency.
+
+### Going Deeper Into Iceberg Table Specification
 Iceberg creates a tree like structure to manage the metadata. It has catalog which tracks the location of 
 current metafile. Metadata file tracks the log of snapshots. Each snapshot tracks one manifest list. Each manifest 
 list tracks list of manifest files for the snapshot. Each manifest file tracks list of data files.
 
 ![ Iceberg Table Specification ](/assets/apache%20iceberg/ApacheIceberg-Iceberg%20Table%20Spec.drawio.png)
 
-### Detailed representation of iceberg metadata store.
+Let me break down Iceberg's tree-like metadata structure in more detail:
+1. Catalog (Root)
+- Top-level pointer.
+- Tracks the current metadata file location.
+- Enables atomic updates through single-point updates ( compare and swap technique ).
+- Can be implemented using various catalog implementations (Hive, Glue, etc.).
+
+2. Metadata Files
+- Contains snapshot information.
+- Maintains a log of all snapshots.
+- Tracks schema evolution.
+- Stores table properties and configurations.
+- Points to manifest lists.
+
+4. Manifest Lists
+- Each snapshot has one manifest list.
+- Acts as an index of manifest files.
+- Helps in organizing manifests by partition.
+- Enables efficient filtering at the manifest level.
+
+5. Manifest Files
+- Contains list of data files.
+- Stores partition data.
+- Maintains file-level statistics.
+- Records file additions and deletions.
+- Enables predicate push down ( query optimization ).
+
+5. Data Files
+- Actual data stored in file formats like Parquet.
+- Immutable once written.
+- Contains the table's data records.
+
+This structure allows Iceberg to provide features like:
+1. Snapshot isolation 
+2. Schema evolution 
+3. Partition evolution 
+4. Time travel queries 
+5. Incremental processing
+
+
+#### Seeing Under The Hood of Iceberg MetaData Files.
+
 Bellow does not contain the detailed schema, please check [iceberg official documentation](https://iceberg.apache.org/) 
-for this.
+for this. Going over these schema will give a simple east to understand view of what it contains.
+
 ```
 <table-metadata-location>/metadata/v<version-number>.metadata.json
 ┌───────────────────────────────────────────────────┐
@@ -114,7 +193,8 @@ and shown here as separate block just for explaining.
 └──────────────────────────────────┘
 
 ````
-### Understanding how iceberg metadata store evolve with new write operations
+
+### Understanding Iceberg Metadata Store Evolution With New Writes
 For every write operation in an Apache Iceberg table, a **new snapshot** is created. This process starts with 
 generating new data files and updating or adding manifest files that track these changes. A **new manifest list**
 is then created, referencing both newly added manifest files and existing ones that remain unchanged. This ensures 
@@ -219,15 +299,15 @@ DELETE FROM my_iceberg_table
 WHERE name = 'Steve';
 ```
 
-Note: For simplification I have not represented metadata file but only new snapshots created for every write. 
-
+Note: For simplification I have not represented metadata file but only new snapshots created for every write.
 
 ![ Iceberg MOR Example ](/assets/apache%20iceberg/ApacheIceberg-Iceberg%20table%20Write%20MOR.drawio.png)
 
 
-### Up Next
+### Upcoming Blogs will talk about
 - How Apache Iceberg does compaction ?
-- How Apache Iceberg handle data conflicts ?
+- How Apache Iceberg handle data conflicts ( essential for consistency ) ?
+- How Apache Iceberg improves performance?
 
 
 ## References
