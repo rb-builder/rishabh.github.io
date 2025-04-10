@@ -2,11 +2,12 @@
 title: "Apache Iceberg Internals"
 author: Rishabh Bhatia
 categories: [database-internals]
-tags: distributed systems swe basics academic software engineering design formal reasoning
-date: 2025-02-15 10:00:00 -0700
+tags: distributed systems database internals swe dive deep academic software engineering design iceberg architecture
+date: 2025-02-22 10:00:00 -0700
 ---
 
 This blog dives deep into the internal workings of Apache Iceberg.
+
 ## Prerequisite
 This blog is useful to you if you understand table formats, data warehouses, and data lakes.
 
@@ -55,9 +56,10 @@ list tracks list of manifest files for the snapshot. Each manifest file tracks l
 Bellow does not contain the detailed schema, please check [iceberg official documentation](https://iceberg.apache.org/) 
 for this.
 ```
+<table-metadata-location>/metadata/v<version-number>.metadata.json
 ┌───────────────────────────────────────────────────┐
 │                  Metadata                         │
-│ (table metadata file tracking log of snapshots.)  │ <table-metadata-location>/metadata/v<version-number>.metadata.json
+│ (table metadata file tracking log of snapshots.)  │ 
 │-------------------------------------------------  │
 │ - Table schema                                    │
 │ - Snapshot list                                   │
@@ -67,11 +69,13 @@ for this.
 └───────────────────────────────────────────────────┘
             │ │ │  
             ▼ ▼ ▼
+Snapshot list is present in above metadata file, 
+and shown here as separate block just for explaining.
 ┌──────────────────────────────────┐
 │        Snapshot                  │
 │ (snapshot in metadata            │
-│    tracks manifest list)         │  log of snapshot is present in above metadata file, 
-│----------------------------------│   and shown here as separate block just for explaining.
+│    tracks manifest list)         │  
+│----------------------------------│   
 │ - Snapshot ID                    │
 │ - Manifest list location         │
 │ - Timestamp                      │
@@ -79,29 +83,32 @@ for this.
 └──────────────────────────────────┘
             │  
             ▼
+<table-metadata-location>/metadata/snap-<snapshot-id>-<random-uuid>.avro
 ┌──────────────────────────────────────────┐
 │        Manifest List                     │
 │ (list of manifest files per snapshot)    │
-│-------------------------------------     │ <table-metadata-location>/metadata/snap-<snapshot-id>-<random-uuid>.avro
+│-------------------------------------     │ 
 │ - Location of the manifest file          │
 │ - added_snapshot_id                      │
 └──────────────────────────────────────────┘
             │ │ │
             ▼ ▼ ▼
+<table-metadata-location>/metadata/<manifest-file-id>-<random-uuid>.avro
 ┌──────────────────────────────────┐
 │        Manifest Files            │
 │----------------------------------│
 │ - References to data files       │
-│ - Partition-level stats          │ <table-metadata-location>/metadata/<manifest-file-id>-<random-uuid>.avro
+│ - Partition-level stats          │ 
 │ - File existence (added/deleted) │
 │ - Data file format (Parquet, ORC)│
 └──────────────────────────────────┘
             │ │ │
             ▼ ▼ ▼
+<table-location>/data/<partition-path>/<unique-file-name>.<format>
 ┌──────────────────────────────────┐
 │          Data Files              │
 │----------------------------------│
-│ - Actual data storage (e.g.,     │ <table-location>/data/<partition-path>/<unique-file-name>.<format>
+│ - Actual data storage (e.g.,     │ 
 │   Parquet, ORC, Avro files)      │
 │ - Column statistics              │
 └──────────────────────────────────┘
