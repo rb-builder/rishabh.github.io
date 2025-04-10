@@ -1,3 +1,9 @@
 # Build settings
 title: Relentless Leader
 theme: minima
+
+# Minima settings
+header_pages:
+  - all-posts.html
+  - distributed-systems.html
+  - about.markdown
