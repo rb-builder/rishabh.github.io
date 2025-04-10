@@ -14,3 +14,6 @@ license_url: "creativecommons.org/licenses/by-nc-nd/4.0/"
 linkedin_username: relentless-leader
 github_username: relentless-leader
 twitter_username: RishabhBhatia_
+
+show_excerpts: true
+excerpt_separator: <!--more-->
