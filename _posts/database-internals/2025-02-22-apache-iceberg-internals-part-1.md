@@ -349,8 +349,21 @@ and [MergeAppend](https://github.com/apache/iceberg/blob/main/core/src/main/java
 
 ![ Iceberg Simplified Protocol ](/assets/apache%20iceberg/ApacheIceberg-Protocol.drawio.png)
 
+## Appendix
 
-### Upcoming Blogs will talk about
+**In dept analysis of Iceberg Write control flow.**
+
+**NOTE** - I will go deeper and will explain it in details in concurrency blog.
+
+
+![ Iceberg Write Control Flow ](/assets/apache%20iceberg/ApacheIceberg-Write%20Control%20Flow.drawio.png)
+
+
+If you are interested to dive further down the rabbit hole, good way to start is from compute engine adapter module. I
+started from Apache Spark module, specifically [SparkWrite Class](https://github.com/apache/iceberg/blob/main/spark/v3.5/spark/src/main/java/org/apache/iceberg/spark/source/SparkWrite.java).
+
+
+## Upcoming Blogs will talk about
 - How Apache Iceberg does compaction ?
 - How Apache Iceberg handle data conflicts ( essential for consistency ) ?
 - How Apache Iceberg improves performance?
@@ -359,15 +372,3 @@ and [MergeAppend](https://github.com/apache/iceberg/blob/main/core/src/main/java
 - [Iceberg Code Base](https://github.com/apache/iceberg) for understanding iceberg protocol
 - [Iceberg Official docs](https://iceberg.apache.org/terms/) for understanding iceberg specification
 - [Apache Iceberg The Definitive Guide](https://www.dremio.com/wp-content/uploads/2023/02/apache-iceberg-TDG_ER1.pdf) for highly understanding for Iceberg.
-
-## Appendix
-
-**NOTE** - I will go deeper and will explain it in details in upcoming blogs.
-
-**In dept analysis of Iceberg Write control flow.**
-
-![ Iceberg Write Control Flow ](/assets/apache%20iceberg/ApacheIceberg-Write%20Control%20Flow.drawio.png)
-
-
-If you are interested to dive further down the rabbit hole, good way to start is from compute engine adapter module. I
-started from Apache Spark module, specifically [SparkWrite Class](https://github.com/apache/iceberg/blob/main/spark/v3.5/spark/src/main/java/org/apache/iceberg/spark/source/SparkWrite.java).
