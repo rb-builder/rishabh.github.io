@@ -306,20 +306,20 @@ class VectorizedProcessor {
 #### Design
 ```
 ┌────────────────────────────┐
-│    Iceberg Metadata       │
+│    Iceberg Metadata        │
 ├────────────────────────────┤
-│ - Column Statistics       │
-│ - Value Bounds           │
-│ - Null Counts            │
+│ - Column Statistics        │
+│ - Value Bounds             │
+│ - Null Counts              │
 └──────────────┬─────────────┘
                │
                ▼
 ┌────────────────────────────┐
 │  Vectorized Read Planning  │
 ├────────────────────────────┤
-│ 1. Pre-filter pages       │
-│ 2. Optimize batch size    │
-│ 3. Memory allocation      │
+│ 1. Pre-filter pages        │
+│ 2. Optimize batch size     │
+│ 3. Memory allocation       │
 └──────────────┬─────────────┘
                │
                ▼
@@ -329,9 +329,19 @@ class VectorizedProcessor {
  
 ```
 
-### Data Layout Optimization: Z-Ordering & Sorted Files
+### Compaction
 #### The Problem:
-Poor data layout leads to inefficient scans, especially for multi-column queries.
+Query engine over Parquet generates tons of small files, especially with frequent inserts/updates. Traditional 
+parquet tables, lacks centralized metadata, so: 
+1. Compaction requires a full table scan 
+2. No insight into which files are causing performance issues. 
+Without proper data layout leads to inefficient scans, especially for multi-column queries.
+
+Problems:
+1. High compute and I/O cost during compaction. 
+2. No integration with table metadata — just a rewrite. 
+3. Query performance continues degrading until compaction is done. 
+4. Difficult to automate safely without introducing write conflicts.
 
 #### How Iceberg Helps:
 1. Hidden Partitioning & Partition Evolution: No need for static partitioning—Iceberg automatically adapts partitions based on usage patterns.
