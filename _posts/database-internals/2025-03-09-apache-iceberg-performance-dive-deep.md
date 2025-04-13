@@ -15,6 +15,104 @@ like Apache Spark**.
 By the end of this document, you will have a deep understanding of how Iceberg enhances performance, 
 the trade-offs involved, and best practices for maximizing efficiency in read-heavy workloads.
 
+## Iceberg Recap
+
+### Iceberg representation in analytics layers. 
+
+```
+    +------------------------------------------+
+    |         COMPUTE LAYER                    |
+    |                                          |
+    |  +--------+  +--------+  +--------+      |
+    |  | Spark  |  | Flink  |  | Other  |      |
+    |  +--------+  +--------+  +--------+      |
+    +------------------------------------------+
+                     ⬇️ ⬆️
+    +------------------------------------------+
+    |           ICEBERG LAYER                  |
+    |  +----------------+   +---------------+  |
+    |  | Table Metadata |   | Versioning   |   |
+    |  +----------------+   +---------------+  |
+    |  +----------------+   +---------------+  |
+    |  | Schema Control |   | Transactions  |  |
+    |  +----------------+   +---------------+  |
+    +------------------------------------------+
+                     ⬇️ ⬆️
+    +------------------------------------------+
+    |           DATA FORMAT                    |
+    |                                          |
+    |          +-----------+                   |
+    |          | Parquet   |                   |
+    |          +-----------+                   |
+    +------------------------------------------+
+                     ⬇️ ⬆️
+    +------------------------------------------+
+    |           STORAGE LAYER                  |
+    |                                          |
+    |    +-----+  +------+  +------+           |
+    |    | S3  |  | HDFS |  | etc  |           |
+    |    +-----+  +------+  +------+           |
+    +------------------------------------------+
+```
+
+### Iceberg High Level Design.
+Here's a high-level explanation of the Apache Iceberg stack layers and their key functions:
+
+1. APIs (Top Layer)
+- How users and applications interact with Iceberg tables 
+- Supports multiple query engines (Spark, Flink, Trino)
+- Provides SQL, Java, Python, and REST interfaces 
+- Enables consistent data access across different platforms
+
+2. Catalog
+- Acts as the central registry for all Iceberg tables 
+- Manages table locations and metadata 
+- Supports multiple catalog implementations (AWS Glue, Hive, custom) 
+- Handles version control and schema evolution
+
+3. Metadata
+- Tracks all changes to table data and schema 
+- Maintains snapshots of table state 
+- Manages manifest files that track data files 
+- Enables time travel and rollback capabilities
+
+4. File System
+- Abstracts underlying storage systems 
+- Supports various storage options (S3, HDFS, local) 
+- Handles file operations and path management 
+- Provides consistency across different storage platforms
+
+5. Spec & Data
+- Defines how data is stored and formatted 
+- Manages data files (typically Parquet) 
+- Handles file-level operations 
+- Implements optimizations like partition pruning
+
+6. Table Format (Foundation) 
+- Core specification of the table structure 
+- Ensures ACID transaction compliance 
+- Manages schema evolution rules 
+- Provides foundation for all other layers
+
+
+```
+                    /\
+                   /  \
+                  /APIs\
+                 /______\
+                / CATALOG\
+               /__________\
+              / METADATA   \
+             /______________\
+            /   FILE SYSTEM  \
+           /__________________\
+          /    SPEC & DATA     \
+         /______________________\
+        /      TABLE FORMAT      \
+       /__________________________\
+
+```
+
 
 ## Performance Mental Model
 Performance of any table format is quantified by running same set of queries (usually TPC-DS) against benchmark and
@@ -45,6 +143,7 @@ within the same time period.
 #### Problem Statement:
 Traditional raw parquet tables require Spark to list directories in cloud storage, which becomes
 slow as the dataset grows. Listing many small files adds latency and increases compute costs.
+
 ```
 Raw Parquet Structure
 ├── folder1/
@@ -53,6 +152,7 @@ Raw Parquet Structure
 └── folder2/
 └── file3.parquet
 ```
+
 Problems:
 1. Full directory scan required
 2. No table-level statistics
@@ -79,20 +179,22 @@ Iceberg Metadata Structure
 └── Data Files
     └── Parquet files
 ```
+
 #### Why It Matters
+
 ```java
 // Raw Parquet: Directory Listing
+// Can take minutes for large tables
 long startTime = System.currentTimeMillis();
 FileSystem fs = FileSystem.get(conf);
 RemoteIterator<LocatedFileStatus> files = fs.listFiles(
     new Path("/data/"), true);
-// Can take minutes for large tables
 
 // Iceberg: Direct Metadata Access
+// Completes in milliseconds
 TableScan scan = table.newScan();
 Snapshot snapshot = table.currentSnapshot();
 Iterable<DataFile> files = snapshot.dataFiles();
-// Completes in milliseconds
 ```
 
 ### File Pruning: Scanning Only Necessary Data
@@ -101,6 +203,7 @@ unnecessary files or partitions during query execution.
 
 #### Problem Statement:
 In raw parquet tables, query engine often reads unnecessary files due to inefficient partition pruning, increasing I/O and compute costs.
+
 ```sql
 -- Raw Parquet Query
 SELECT * FROM parquet_table 
@@ -131,6 +234,7 @@ Execution Steps:
 3. Read only relevant files (effective file pruning)
 
 #### Design
+
 ```
 ┌──────────────────┐     ┌──────────────────┐     ┌──────────────────┐
 │   Query Engine   │────▶│  Iceberg Scan    │────▶│ Manifest Lists   │
@@ -142,8 +246,8 @@ Execution Steps:
 │    Data Read     │◀────│   Data Files     │◀────│ Manifest Files   │
 │   Execution      │     │    Filtering     │     │    Filtering     │
 └──────────────────┘     └──────────────────┘     └──────────────────┘
-
 ```
+
 #### Why It Matters
 With Iceberg, even non-partition columns (e.g., WHERE value = 100) can trigger file skipping via min/max stats in 
 manifests. Parquet files must be opened to get row group stats—meaning Iceberg avoids file opens altogether in many cases.
@@ -172,6 +276,7 @@ class ParquetStatistics {
 #### How Iceberg Helps
 1. Manifest Filtering: Iceberg applies predicate filtering at the manifest level, ensuring that entire file groups are skipped before query execution.
 2. Column-Level Filtering: Since Iceberg maintains column-level statistics, filters are applied at a fine-grained level.
+
 ```java
 // Iceberg Statistics
 class IcebergStatistics {
@@ -185,7 +290,9 @@ class IcebergStatistics {
     NanCounts nanCounts;
 }
 ```
+
 #### Design
+
 ```
 ┌──────────────────────────────────────────────────────────┐
 │                    Query with Predicates                 │
@@ -206,7 +313,6 @@ class IcebergStatistics {
 ├─────────────────────┬─────────────────┬──────────────────┤
 │  Partition Filter   │ Manifest Filter │   File Filter    │
 └─────────────────────┴─────────────────┴──────────────────┘
-
 ```
 
 ####  Performance Gains
@@ -217,6 +323,7 @@ class IcebergStatistics {
 ### Vectorized Reads: Efficient Columnar Processing
 #### The Problem:
 Traditional row-wise data processing in Spark is slow, as each record is processed sequentially.
+
 ```java
 // Traditional Parquet Vectorization
 class ParquetVectorizedReader {
@@ -303,7 +410,9 @@ class VectorizedProcessor {
     }
 }
 ```
+
 #### Design
+
 ```
 ┌────────────────────────────┐
 │    Iceberg Metadata        │
@@ -326,7 +435,6 @@ class VectorizedProcessor {
 ┌────────────────────────────┐
 │    Vectorized Execution    │
 └────────────────────────────┘
- 
 ```
 
 ### Compaction
