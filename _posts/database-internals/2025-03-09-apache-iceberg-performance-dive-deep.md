@@ -539,6 +539,7 @@ QUERY: `WHERE value < 10`
 - Higher compaction run time.
 - Data locality is improved.
 3. Z-order compaction Strategy 
+- Rewrites data files by clustering rows using Z-order curves on specified columns to optimize multi-dimensional range query performance.
 - Higher compaction run time.
 - Data locality is improved, better than sort compaction.
 
