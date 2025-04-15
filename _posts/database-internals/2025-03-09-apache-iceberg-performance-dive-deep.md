@@ -14,7 +14,7 @@ the trade-offs involved, and best practices for maximizing efficiency in read-he
 
 ## Iceberg Recap
 
-### Iceberg representation in analytics layers. 
+### Iceberg integration with compute engine 
 
 ```
     +------------------------------------------+
@@ -52,7 +52,7 @@ the trade-offs involved, and best practices for maximizing efficiency in read-he
     +------------------------------------------+
 ```
 
-### Iceberg High Level Design.
+### Iceberg Internal High Level Design.
 
 ```
                     /\
@@ -256,7 +256,7 @@ With Iceberg, even non-partition columns (e.g., WHERE value = 100) can trigger f
 manifests. Parquet files must be opened to get row group stats—meaning Iceberg avoids file opens altogether in many cases.
 This fits back with our mental model to not let compute engine work on files that are not really needed to execute the query. 
 
-Raw Parquet: O(n) where n = total files
+Raw Parquet: O(n) where n = total files   
 Iceberg: O(log n) where n = relevant files
 
 ### Predicate Pushdown: Filtering at the Metadata & File Level
@@ -450,7 +450,7 @@ class VectorizedProcessor {
 └────────────────────────────┘
 ```
 
-### Compaction
+### Compaction: Improved Data locality
 
 Compaction is a process of combining multiple small files into larger ones to optimize storage and query performance.
 
@@ -478,7 +478,7 @@ The goals of data file compaction are:
 - Reduce the number of data files that must be loaded during reads. 
 - Reduce the number of delete files that must be applied during reads.
 
-##### Data Locality
+#### Data Locality
 Query engine uses metadata layer to get the file stats to perform query planning. These stats are only useful if it 
 helps with file pruning discussed above. Sorting is one of the techniques to add value to file stats. Query engine
 can use the file stats in metadata files to only load required files. Thus data locality can greatly influence the performance
