@@ -53,62 +53,61 @@ the trade-offs involved, and best practices for maximizing efficiency in read-he
 ```
 
 ### Iceberg High Level Design.
-Here's a high-level explanation of the Apache Iceberg stack layers and their key functions:
-
-1. APIs (Top Layer)
-- How users and applications interact with Iceberg tables 
-- Supports multiple query engines (Spark, Flink, Trino)
-- Provides SQL, Java, Python, and REST interfaces 
-- Enables consistent data access across different platforms
-
-2. Catalog
-- Acts as the central registry for all Iceberg tables 
-- Manages table locations and metadata 
-- Supports multiple catalog implementations (AWS Glue, Hive, custom) 
-- Handles version control and schema evolution
-
-3. Metadata
-- Tracks all changes to table data and schema 
-- Maintains snapshots of table state 
-- Manages manifest files that track data files 
-- Enables time travel and rollback capabilities
-
-4. File System
-- Abstracts underlying storage systems 
-- Supports various storage options (S3, HDFS, local) 
-- Handles file operations and path management 
-- Provides consistency across different storage platforms
-
-5. Spec & Data
-- Defines how data is stored and formatted 
-- Manages data files (typically Parquet) 
-- Handles file-level operations 
-- Implements optimizations like partition pruning
-
-6. Table Format (Foundation) 
-- Core specification of the table structure 
-- Ensures ACID transaction compliance 
-- Manages schema evolution rules 
-- Provides foundation for all other layers
-
 
 ```
                     /\
                    /  \
-                  /APIs\
+                  /APIs\                ← Public APIs (Spark, Flink, Trino, REST)
                  /______\
-                / CATALOG\
+                / CATALOG\              ← Catalog abstraction (Hive, Hadoop, REST, Nessie)
                /__________\
-              / METADATA   \
+              / METADATA   \           ← Snapshots, Manifests, Schema, Partition spec
              /______________\
-            /   FILE SYSTEM  \
+            /   FILE SYSTEM  \         ← Object store or HDFS (S3, GCS, HDFS, etc.)
            /__________________\
-          /    SPEC & DATA     \
+          /    SPEC & DATA     \       ← Actual data files (Parquet, Avro, ORC) + partition logic
          /______________________\
-        /      TABLE FORMAT      \
+        /      TABLE FORMAT      \     ← Iceberg core: versioned, immutable, columnar table format
        /__________________________\
 
+
 ```
+
+Here's a high-level explanation of the Apache Iceberg stack layers and their key functions:
+    
+1. APIs (Top Layer)
+- Provide interface for users and applications to interact with Iceberg tables
+- Enables consistent data access across different platforms
+    
+2. Catalog
+- Acts as the central registry for all Iceberg tables. Manages table locations and metadata.
+- Supports multiple catalog implementations (AWS Glue, Hive, custom)
+- Handles version control and schema evolution
+    
+3. Metadata
+- Tracks all changes to table data and schema
+- Maintains snapshots of table state
+- Manages manifest files that track data files
+- Enables time travel and rollback capabilities
+    
+4. File System
+- Abstracts underlying storage systems
+- Supports various storage options (S3, HDFS, local)
+- Handles file operations and path management
+- Provides consistency across different storage platforms
+    
+5. Spec & Data
+- Defines how data is stored and formatted
+- Manages data files (typically Parquet)
+- Handles file-level operations
+- Implements optimizations like partition pruning
+   
+6. Table Format (Foundation)
+- Core specification of the table structure
+- Ensures ACID transaction compliance
+- Manages schema evolution rules
+- Provides foundation for all other layers
+
 
 
 ## Performance Mental Model
