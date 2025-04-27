@@ -52,8 +52,9 @@ Logs at Server 2
 Server 2 logs Event B received  at 10:10 local time   
 Server 2 logs Event D sent  at 10:12 local time
 
-Correct Total of Events - A -> B, D -> E.    
-Order Ignoring clock skew - A, E, B, D   [Incorrect ordering of events, due to clock skew.]    
+Ordering of events using local physical time of servers - A, E, B, D       
+Correct ordering of Events - A -> B, D -> E.
+
 
 ## Similar problem as Theory Of Relativity.
 
