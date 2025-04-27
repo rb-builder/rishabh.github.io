@@ -2,7 +2,7 @@
 title: "Apache Iceberg Internals Dive Deep On Performance"
 author: Rishabh Bhatia
 categories: [database-internals]
-tags: distributed systems database internals swe dive deep academic software engineering design iceberg architecture
+tags: distributed systems database internals design iceberg architecture
 date: 2025-03-09 10:00:00 -0700
 ---
 

@@ -2,7 +2,7 @@
 title: "Apache Iceberg Architecture Dive Deep"
 author: Rishabh Bhatia
 categories: [database-internals]
-tags: distributed systems database internals swe dive deep academic software engineering design iceberg architecture
+tags: distributed systems database internals design iceberg architecture
 date: 2025-02-22 10:00:00 -0700
 ---
 
