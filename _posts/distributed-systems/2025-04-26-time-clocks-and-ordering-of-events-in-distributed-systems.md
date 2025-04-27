@@ -6,9 +6,10 @@ tags: distributed systems design paper time clocks
 date: 2025-04-26 10:00:00 -0700
 ---
 
-To build foundation on distributed system, one must understand the distributed time. To embark on the journey of time we 
-will start with going over the research paper "Time, Clocks, and the Ordering of Events in a Distributed System" 
-published by Lamport in 1978. It is a must read paper who wants to build any distributed systems.
+To build a strong foundation in distributed systems, it's essential to first understand the concept of distributed time.
+To begin this journey, we'll start by exploring the landmark research paper "Time, Clocks, and the Ordering of Events 
+in a Distributed System," published by Leslie Lamport in 1978. This paper is a must-read for anyone designing
+or building distributed systems.
 
 ## What is time?
 Time is an abstract concept and is the fundamental dimension of our universe. Though time in physical clock that we 
@@ -116,6 +117,11 @@ Since it defines only scalar time, one cannot determine the ordering by simply e
 
 
 ## Learning to take away?
+> In a distributed system, understanding and enforcing causality is more fundamental than trying to mimic real-world physical time.
+> 
+Lamport showed that logical time is sufficient for maintaining consistency and ordering in distributed systems — a revolutionary idea that has influenced almost all later work in distributed computing.
+
+Here are few practical learnings -
 1. Events in a distributed system form a partial order.
 2. Getting true total order is impractical without introducing serious bottlenecks or single point of failures.
 3. Most large scale distributed systems uses the partial order into an arbitrary total order. Making sure the total 
