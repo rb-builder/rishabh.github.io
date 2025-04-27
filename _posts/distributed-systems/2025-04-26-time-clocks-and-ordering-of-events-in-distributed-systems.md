@@ -119,7 +119,7 @@ Since it defines only scalar time, one cannot determine the ordering by simply e
 
 ## Learning to take away?
 > In a distributed system, understanding and enforcing causality is more fundamental than trying to mimic real-world physical time.
-> 
+    
 Lamport showed that logical time is sufficient for maintaining consistency and ordering in distributed systems — a revolutionary idea that has influenced almost all later work in distributed computing.
 
 Here are few practical learnings -
