@@ -13,7 +13,7 @@ capture consistent global states in distributed systems.
 
 ## Prerequisite
 This blog is more useful to you if you have some understanding of time in distributed system. You can read my prev blog 
-to understand more on it - https://relentless-leader.com/time-clocks-and-ordering-of-events-in-distributed-systems.html
+to understand more on it - [time-clocks-and-ordering-of-events-in-distributed-systems](https://relentless-leader.com/time-clocks-and-ordering-of-events-in-distributed-systems.html)
 
 ## The core problem: No Global Now
 The main problem Mattern was solving is how to take a snapshot in a distributed system. Taking a snapshot in distributed
