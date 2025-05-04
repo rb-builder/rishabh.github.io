@@ -3,7 +3,7 @@ title: "Understanding distributed time using Vector Clocks"
 author: Rishabh Bhatia
 categories: [distributed-systems]
 tags: distributed systems design paper time clocks
-date: 2025-04-26 10:00:00 -0700
+date: 2025-04-29 10:00:00 -0700
 ---
 
 To build a strong foundation in distributed systems, it's essential to first understand the concept of distributed time.
