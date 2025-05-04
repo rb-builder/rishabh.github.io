@@ -3,7 +3,7 @@ title: "Understanding distributed consensus from the Byzantine generals problem"
 author: Rishabh Bhatia
 categories: [distributed-systems]
 tags: distributed systems design paper time clocks
-date: 2025-04-26 10:00:00 -0700
+date: 2025-05-02 10:00:00 -0700
 ---
 
 We are on a path to build a strong foundation in distributed systems. We have already gone over distributed time; the
