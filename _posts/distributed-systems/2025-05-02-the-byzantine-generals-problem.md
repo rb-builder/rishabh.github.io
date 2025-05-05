@@ -13,23 +13,65 @@ This paper introduces the concept of Byzantine faults and formally proves the co
 is impossible in the presence of arbitrary (malicious or faulty) behavior.
 
 ## Models in Distributed system
-While building any complex distributed system, we start with capturing assumption on how nodes/servers and networks 
-connecting them behave. These assumptions are usually captured in system model. 
+A system model in distributed systems is a conceptual framework that defines the key characteristics, assumptions, 
+and properties of the distributed system. It helps in understanding, designing, and reasoning about distributed systems.  
+Here's a comprehensive breakdown:
+
+1. Node (Process) Model: Describes the behavior of computing nodes, defining how processes operate and fail. The different types of failure in nodes can be: 
+- Crash failures (fail-stop)
+- Byzantine failures (arbitrary/malicious behavior)
+- Omission failures (dropped messages)
+2. Communication Model: Focuses on how messages are exchanged between nodes. It is concerned with delivery mechanism and reliability. Key characteristics:
+- Message passing vs Shared memory 
+- Reliable vs Unreliable channels
+- Point-to-point vs Broadcast
+- Network partitioning possibilities
+- FIFO vs non-FIFO channels
+3. Timing Model: Focuses on time related aspects such as process execution speed, and acceptable delays, clock sync, execution rates. Key characteristics:
+- Synchronous: Fixed bounds on timing 
+- Asynchronous: No timing guarantees 
+- Partially synchronous: Some timing bounds
+
 To understand system model we can use two classic thought experiments in distributed systems are: 
-the two generals problem and the Byzantine generals problem.
+the two generals problem and the Byzantine generals problem.    
 
 ## The Two Generals Problem
-There are two armies trying to capture a city. Since city defences are strong, both the armies need to attack 
-simultaneously to capture the city. The assumption is message will not be tempered on the way and same content will be delivered.
+### Situation
+In this thought experiment, there are two armies trying to capture a city. In order to capture the city, both the 
+armies need to attack simultaneously. If only one army attacks, the city defeats the army.   
 
-The problem here is message can be lost on the way.
+### Participants:
+1. Two armies (nodes/processes)
+2. Each general commands one army 
+3. Both generals need to agree on attack time 
+4. Each node can: 
+- Send messages 
+- Receive messages 
+- Make local decisions
+
+### Node (Process) Model
+In this thought experiment, our assumption is:
+A1: None of the generals are traitor.    
+A2: Our generals will not die. 
+    
+### Communication Model
+The generals of two armies can communicate using messages. Assumptions are:     
+A3. message will not be tempered on the way.    
+    
+Acceptable failure scenarios are:     
+A4. Any message can be lost on the way. Since city has strong defences, they can capture any messenger resulting in lost message.      
+   
+### Timing Model
+A5. Messages are send asynchronously, and there is no bound on message delivery time.
+A6: No clocks are sync between the generals.
 
 Bellow is the image sourced from [sketch planations](https://sketchplanations.com/the-two-generals-problem) showcasing the thought
-experiment -
+experiment -   
+
 ![ The two generals problem ](/assets/distributed%20system/consensus/sketchplanations-the-two-generals-problem.png)
 
 "The Two Generals Problem", highlights the core issue: **reliable agreement is impossible over an unreliable channel**
-— even if both generals want to coordinate an attack.
+— even if both generals want to coordinate an attack. The problem is **deceptively hard**.
 
 This table shows the possible outcomes based on whether General A's message and the acknowledgment from General B are successfully delivered:
 
@@ -81,20 +123,20 @@ This table shows the possible outcomes based on whether General A's message and 
 </tbody>
 </table>
 
-Since the network is unreliable it is impossible for General A to tell if the message is delivery and then lost, or message
+Since the **network is unreliable it is impossible** for General A to tell if the message is delivery and then lost, or message
 was not delivered.
 ![ The two generals problem ](/assets/distributed%20system/consensus/Distributed%20Consensus-the%20Two%20Generals%20Problem.drawio.png)
 
 
-### **Thought Experiment**
-What protocol should the two generals use to agree on a plan ?
-1. If general A attack irrespective of acknowledgement received ? 
-General A can try to send lots of messages to increase the probability that one will reach the other general.
-If all messages are lost, the general A's army will go on attack alone.
+### **Brainstorm on possible options**
+What protocol should the two generals use to agree on a plan ?   
+1. If general A attack irrespective of acknowledgement received.   
+General A can try to send lots of messages to increase the probability that one will reach the other general.    
+If all messages are lost, the general A's army will go on attack alone.   
 
-2. General A only attacks if positive response from general B is received?
+2. General A only attacks if positive response from general B is received.   
 Now General A is saved, but General B does not know if the ack is received by general A. The situation is reversed and the
-same problem is shifted to general B.
+same problem is shifted to general B.   
 
 ### Learnings from this thought experiment
 **The core problem** is no matter how many messages are exchanged, generals cannot be certain of co-ordination.
@@ -103,7 +145,7 @@ same problem is shifted to general B.
 about the state of another node. The only way how a node can know something is by having that knowledge communicated in
 a message. 
 
-### The practical Example of two generals problem
+### The Real World Example of two generals problem
 ![ The two generals problem - practical example](/assets/distributed%20system/consensus/Distributed%20Consensus-The%20Two%20Generals%20Problem%20Practical%20Example.drawio.png)
 
 The online shop has to dispatch the goods, if and only if payment goes through. To solve the problem in this scenario 
@@ -111,54 +153,61 @@ where customer gets charged but order did not go through. The bank will refund t
 
 The fact that a payment is something that can be rolled back (unlike an army being defeated) makes the problem solvable.
 
-
-
 ## The Byzantine Generals Problem
+### Situation
 The Byzantine generals problem is similar to two generals problem. In this case, there are three or more armies trying to
-capture the city. Messages between the armies will be communicated by messengers. In this case the assumption is message
-is always delivered.   
-The problem here is the messages can be manipulated by the traitor general.
+capture the city, messages are always delivered but there can be a traitor sending wrong messages.
 
+### Participants:
+1. n generals (nodes/processes) 
+2. One commander (source node) 
+3. n-1 lieutenant generals (receiving nodes)
 
-In the research paper by lamport they used commander, and lieutenants to describe the problem. So we will use the same
-to describe the situation:
+### Node (Process) Model
+In this thought experiment, Nodes can be either:
+A1. Loyal (follows protocol)
+A2. Traitors (Byzantine faulty)
+
+### Communication Model
+The generals of two armies can communicate using messages. Assumptions are:     
+A3. Message can be oral (forgeable) or signed (unforgeable signatures).
+A4. Messages cannot be lost/delayed.
+
+### Timing Model
+A5. Messages are synchronous with fixed bound on message delivery time.
+
 
 ![ The Byzantine generals problem](/assets/distributed%20system/consensus/Distributed%20Consensus-The%20Byzantine%20Generals%20Problem.drawio.png)
 
 ### **Thought Experiment**
 
-The generals must have an algorithm to guarantee that :
-**A. All loyal generals decide upon the same plan of action.**
-**B. A small number of traitors cannot cause the loyal generals to adopt a bad plan.**
+We need to find an algorithm for the generals to guarantee that :
+**A. All loyal generals decide upon the same plan of action.**   
+**B. A small number of traitors cannot cause the loyal generals to adopt a bad plan.**   
 
 
-and more formally defining Byzantine Generals Problem. A commanding general must send an order to
-his n - 1 lieutenant generals such that -
+and more formally defining Byzantine Generals Problem. A commanding general must send an order to his n - 1 lieutenant generals such that -
 IC1. All loyal lieutenants obey the same order.
-IC2. If the commanding general is loyal, then every loyal lieutenant obeys the
-order he sends.
+IC2. If the commanding general is loyal, then every loyal lieutenant obeys the order he sends.
 
 **Impossibility Results**    
-Lamport showed that if we use oral messages, no solution will work unless more than two-thirds of the generals are loyal.
-For a viable solution we will need 3m + 1 generals where m is the number of traitors.
-
-When we say oral message, we mean the message is not signed by the generals, and sender details cannot be verified .
-
+Lamport showed that if we use oral messages (can be forged), no solution will work unless more than two-thirds of the generals are loyal.
+For a viable solution we will need **3m + 1** generals where m is the number of traitors.
 
 ### **A Solution With Oral Messages**    
 Each general is supposed to execute some algorithm that involves sending messages to the other generals, and we assume
 that a loyal general correctly executes his algorithm. The definition of an oral message is embodied in the following 
 assumptions which we make for the generals' message system:   
-A1. Every message that is sent is delivered correctly.   
-A2. The receiver of a message knows who sent it.   
-A3. The absence of a message can be detected.   
+1. Every message that is sent is delivered correctly.
+2. The receiver of a message knows who sent it.
+3. The absence of a message can be detected.   
 
 **Algorithm**   
 To address the Byzantine Generals Problem, Lamport et al. proposed a recursive algorithm called OM(m), which stands for
 Oral Messages with up to m traitors. It is designed to help loyal generals reach agreement even when some of the 
 generals may be lying, silent, or sending inconsistent messages.
 
-Recap of the setup
+**Recap of the setup**
 1. There is one commander and n - 1 lieutenants. 
 2. The total number of generals n must be at least 3m + 1 to tolerate m traitors. 
 3. Communication is synchronous and point-to-point; messages can be delayed or corrupted by traitors.
@@ -167,11 +216,11 @@ The goal is for all loyal lieutenants to agree on the same order, and if the com
 
 ![ The Byzantine generals problem algorithm](/assets/distributed%20system/consensus/The%20Byzantine%20Generals%20Problem%20Algorithm.png)
 
-The algorithm is **recursive with depth m**, which is the number of traitors the system wants to tolerate.   
-**Base Condition**
-If m = 0:
-1. Commander sends value to all lieutenants 
-2. Lieutenants use the value received 
+The algorithm is **recursive with depth m**, which is the number of traitors the system wants to tolerate.      
+**Base Condition**  
+If m = 0:   
+1. Commander sends value to all lieutenants   
+2. Lieutenants use the value received   
 3. If no value received, use DEFAULT value (e.g., "Retreat").
 
 If m > 0 and you are the Commander:
@@ -285,7 +334,7 @@ This means that Traitors can only choose not to send messages, but cannot alter 
 > algorithms and fault-tolerant systems.
 
 
-1. Byzantine fault tolerant systems need 3f+1 hosts.
+1. Byzantine fault tolerant systems needs atleast 3f+1 hosts.
 2. Authentication (Signatures) changes everything and fairly reduces the complexity of problem.
 
 
