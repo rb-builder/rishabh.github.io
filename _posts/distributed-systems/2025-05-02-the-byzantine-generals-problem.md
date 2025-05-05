@@ -1,8 +1,8 @@
 ---
-title: "Understanding distributed consensus from the Byzantine generals problem"
+title: "Distributed Consensus in Distributed Systems: Two Generals Problem and Byzantine Fault Tolerance Explained"
 author: Rishabh Bhatia
 categories: [distributed-systems]
-tags: distributed systems design paper time clocks
+tags: distributed systems design paper Consensus
 date: 2025-05-02 10:00:00 -0700
 ---
 
