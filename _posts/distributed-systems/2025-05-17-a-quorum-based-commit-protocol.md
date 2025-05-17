@@ -133,7 +133,7 @@ My thinking is can we choose new leader randomly or deterministically every 1 mi
 **Other learnings**
 - "Prepare to commit" state is a very useful and practical way to reach consensus and is resilient to network partitions.
 - Skeen’s protocol helped transition from coordinator-based blocking schemes to consensus-based fault-tolerant commit mechanisms.
-- **Quorum Intersection** is a simple principle that all “commit” and “abort” quorums must overlap underpins virtually
+- Quorum Intersection is a simple principle that all “commit” and “abort” quorums must overlap underpins virtually
 every major distributed‑consensus and replication protocol since — Paxos, Raft etc.
 
 
