@@ -117,10 +117,10 @@ Once the failure is repaired, just execute the termination protocol again.
 ## Learnings
 **Quorum based protocols is one of the most significant contributions in reaching distributed consensus.**
 It is used all over the place and laid the foundation for quorum-based techniques used in:
-- Paxos and Raft (consensus algorithms)
-- Distributed databases like Spanner, Cassandra, and Dynamo
-- Modern replication and coordination systems (e.g., ZooKeeper, etcd)
-- Object storage systems (e.g., S3)
+- Paxos and Raft(e.g., consensus algorithms);
+- Distributed databases(e.g., Spanner, Cassandra, and Dynamo);
+- Modern replication and coordination systems(e.g., ZooKeeper, etcd);
+- Object storage systems(e.g., S3).
 
 **Key takeaways**
 - **Key idea I took away** is coordinator (leader) election technique to handle consensus or concurrent access to shared state is
