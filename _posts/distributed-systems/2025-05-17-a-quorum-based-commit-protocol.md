@@ -75,7 +75,7 @@ Let
 > - (2.2) After any site has committed, a commit quorum must be maintained.
 > and similar requirements for abort protocol
 
-The basic idea is to avoid tie, we need to define V<sub>c</sub> + V<sub>a</sub> > V. First, a "prepare to commit" 
+The basic idea is to avoid tie, we need to quorum intersection i.e. V<sub>c</sub> + V<sub>a</sub> > V. First, a "prepare to commit" 
 request is sent to all nodes. Each node will try to reach the committable state (completing all preparations and 
 securing resources) and then cast their vote. When V<sub>c</sub> votes are collected through quorum and the voting 
 constraint V<sub>c</sub> + V<sub>a</sub> > V is maintained, a commit decision can be made and sent to all nodes. 
