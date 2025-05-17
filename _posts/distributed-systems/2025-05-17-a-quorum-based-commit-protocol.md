@@ -123,11 +123,12 @@ It is used all over the place and laid the foundation for quorum-based technique
 - Object storage systems (e.g., S3)
 
 **Key takeaways**
-- **Key idea I took away** is to have algorithm that can support decentralized decision making is powerful. Even though the paper
-  was focused on coordinator/leader based system, and chose new one during partition.
 - **Key idea I took away** is coordinator (leader) election technique to handle consensus or concurrent access to shared state is
 a valid and **simple solution**. It also has a **Scalability issues** and **large blast radius** with complete system going 
 into block state till failure is repaired. This makes us think more about the problem and trade-offs.
+- **Key idea I took away** is to have an algorithm that can support decentralized decision making or rotating leaders can
+  be very powerful. Even though the paper was focused on coordinator/leader based system, and chose new one during partition.
+  My thinking is can we choose new every 1 minute or so !!!
 
 **Other learnings**
 - "Prepare to commit" state is a very useful and practical way to reach consensus and is resilient to network partitions.
