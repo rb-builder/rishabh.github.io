@@ -60,11 +60,74 @@ will be either abort or commit to end the transaction.
 ![CrashRecovery-2PC Worker Node FSA.drawio.png](/assets/distributed%20system/consensus/CrashRecovery-2PC%20Worker%20Node%20FSA.drawio.png)
 
 ### Global Transaction State for 2-phase commit protocol 
-Global state defines the complete process state of a transaction. It consists of all possible states that can happen at the same time.
+The paper defines global state as -
+
+> The global state of a distributed transaction is defined to
+consist of:
+> 1) a global state vector containing the states of the local
+   protocols,
+> 2) the outstanding messages-in the network.
+> 
+> The Global state defines the complete process state of a transaction. 
+> A global state is a final state if all local states contained in its state vector are final states. It is said to be
+inconsistent if its state vector contains both a commit state and an abort state.
+
+In simple terms it consists of all possible states that can happen at the same time. So, if at any time there can be multiple
+state possible, then it is said to be inconsistent.
 
 ![CrashRecovery-2PC - global states.drawio.png](/assets/distributed%20system/consensus/CrashRecovery-2PC%20-%20global%20states.drawio.png)
 
+**Concurrency Sets** - The set of transactions that were active (in progress) at the time a node crashes. These are the
+transactions that were neither committed nor aborted at the time of the crash.
+
+In above example The concurrency set of w1 is { q2, a2, p2}. A node at w1 knows that other node will be one of these state.
+
+### Independent Recovery
+The author argues that we need an independent recovery protocol in case of failures because acquiring state and history
+from other nodes may fail.    
+**Personal opinion:** I am not sure about it, I doubt such an algorithm can have practical use case. 
+
+Author defines independent recovery as the protocol that recovers solely based on its own local state, without communicating
+to other nodes. 
+
+**Personal opinion:** Yes, this approach reduces the complexity by reducing the failure scenarios of nodes trying to 
+acquire status of other nodes. But I doubt its practicality.
+
+### Recovery Rules of a single failed node
+Author tries to come up with rules to define what should a node do in case of single node failure.
+
+**Lemma 1:** If a concurrency set contains both a commit and an abort, then the protocol is not resilient against failure. 
+By definition of concurrency set, choosing one state will lead to inconsistent results.
+
+If they are not in consistent set, we can create a protocol that is resilient against single node failure from the following rules (Theorem 2)
+
+- **Rule 1:** If a node's concurrency set contains a commit, the node should commit. Otherwise, abort   
+- **Rule 2:** If another node is in a state s1 where it could get a messages from a node in state t1, but it hasn't received a
+message at the timeout, it must do the same as t1's failure behavior. Anything else would be inconsistent.
+
+Example - 2-Phase Commit does not satisfy lemma 1 but it can be modified to do so with an acknowledgement.
+
+![CrashRecovery-2PC - independent recovery.png](/assets/distributed%20system/consensus/CrashRecovery-2PC%20-%20independent%20recovery.png)
+
+### Limitations of independent recovery
+
+**Can this be extended to multi node failures?**   
+The paper provides **theorem 3** defining there is no protocol using independent recovery that is resilient to multi node 
+failures. The paper also provides the proof for same.
+
+**Can this be extended to network partitioning?**   
+The paper provides **theorem 4** defining there exists no (nonblocking) protocol resilient to a network partitioning when messages are
+lost. The paper also provides the proof for same.
+
+**Personal opinion:** Multi node failures and partitioning is the reality of the world, thus I doubt how useful is independent recovery is.   
+
 ## Learnings
+I think the major motivation of the paper was provoke thinking and reasoning to find a non blocking protocol. Even though it proves
+it is not possible.
+
+I found the bellow learnings useful, overall the paper was too dense with mathematical proofs -
+1. The mental model of global states can be useful in distributed system while thinking about complex problems.
+2. The nondeterministic finite state machine for commit protocol, is also a useful tool while reasoning about the complex state transitions specially in databases. 
 
 
 ## References
