@@ -1,5 +1,5 @@
 ---
-title: "Getting distributed Consensus using quorum based commit protocol"
+title: "FLP Impossibility and beyond"
 author: Rishabh Bhatia
 categories: [distributed-systems]
 tags: distributed systems design paper Consensus
