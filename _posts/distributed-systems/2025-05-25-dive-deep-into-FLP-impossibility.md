@@ -14,7 +14,7 @@ and whole generation of researchers used it to come up with consensus algorithms
 system.
 
 ## Context
-This paper solved a fundamental question that researchers had grappled with regarding consensus in distributed systems.
+The FLP paper solved a fundamental question that researchers had grappled with regarding consensus in distributed systems.
 The consensus problem requires all non-faulty processors in a distributed system to agree on a single value. 
 While it was known that consensus could be achieved reliably in synchronous systems (where timing assumptions can be made),
 the possibility of consensus in asynchronous systems (where no timing assumptions exist) remained an open question.
