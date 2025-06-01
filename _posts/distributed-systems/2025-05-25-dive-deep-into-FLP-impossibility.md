@@ -145,15 +145,31 @@ condition. Instead of requiring processes to agree on exactly the same value, th
 decide on values within a bounded range. This relaxation makes the protocol particularly suitable for practical 
 applications like sensor networks, load balancing, and distributed control systems, where exact agreement isn't 
 necessary and some variance is acceptable.
-4. **Probabilistic Termination** - pioneered by [Ben-Or's 1983 paper](https://homepage.cs.uiowa.edu/~ghosh/BenOr.pdf), addresses consensus by relaxing the termination condition. 
-While deterministic solutions are impossible in asynchronous systems (due to FLP), probabilistic algorithms can achieve
-consensus with high probability. Ben-Or's original algorithm, though requiring O(2^n) expected rounds, demonstrated that
-randomization could circumvent the impossibility result. Modern implementations have significantly improved efficiency 
-through shared coin protocols and other optimizations.
+4. **Probabilistic Termination** - pioneered by [Ben-Or's 1983 paper](https://homepage.cs.uiowa.edu/~ghosh/BenOr.pdf), 
+addresses consensus by relaxing the termination condition. While deterministic solutions are impossible in asynchronous 
+systems (due to FLP), probabilistic algorithms can achieve consensus with high probability. Ben-Or's original algorithm, 
+though requiring O(2^n) expected rounds, demonstrated that randomization could circumvent the impossibility result. 
+Modern implementations have significantly improved efficiency through shared coin protocols and other optimizations.
 
 ## Learnings
 
+The **most powerful learning** for me was how useful impossibility proofs are. This FLP impossibility paper is the foundation over
+which all the future consensus protocols are built upon. Once we know what's impossible, we can start working toward plausible cases
+by **tweaking the parameters to break** the impossibility proof. Most importantly this helps us in **arguing about the system** we are 
+building and defining what the **system actually guarantees.**
+
+Other learnings are 
+1. Trade-offs - In system design and in life all decisions are about trade-offs. Many protocols such as [Ben-Or's 1983 paper](https://homepage.cs.uiowa.edu/~ghosh/BenOr.pdf) 
+are results of trade-offs and defining the system model that slightly tweaks the model to break FLP impossibility.
+2. While reading or building consensus protocols we can decompose it to termination, agreement and validity.
+3. Few system design **thinking** models - 
+ - Failure detection is always probabilistic
+ - Bounded queues, bounded time, bounded everything :) is most powerful technique in overcoming long outages and breaking impossibilities.
+ - Defining System specs before jumping into `can we do xyz -> yeah problem solve, dry run passed :) -> design complete -> design review -> hammered by PEs (good/real ones) :( `. PS: yeah its not design complete -> product launch, hahaha.
+ - Defining the system behavior when impossible situation appears is very important for recovery. Or you can end up with servers doing no real work, or end up in playing long game of "servers will catch up in next 2 hrs, maybe".
+ - Monitoring is important to know when our assumptions in system spec is breaking. 
 
 ## References
 1. [Impossibility of Distributed Consensus with One Faulty Process by Fischer, Lynch and Paterson submitted in 1982 and published in 1985](https://groups.csail.mit.edu/tds/papers/Lynch/jacm85.pdf)
 2. [On the Minimal Synchronism Needed For Distributed Consensus by Dolev, Dwork and Stockmeyer in 1983](https://groups.csail.mit.edu/tds/papers/Stockmeyer/DolevDS83-focs.pdf)
+3. [A Hundred Impossibility Proofs for Distributed Computing by Lynch in 1989](https://groups.csail.mit.edu/tds/papers/Lynch/podc89.pdf)
