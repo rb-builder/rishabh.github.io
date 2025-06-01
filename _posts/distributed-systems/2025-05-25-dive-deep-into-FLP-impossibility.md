@@ -156,7 +156,7 @@ Modern implementations have significantly improved efficiency through shared coi
 The **most powerful learning** for me was how useful impossibility proofs are. This FLP impossibility paper is the foundation over
 which all the future consensus protocols are built upon. Once we know what's impossible, we can start working toward plausible cases
 by **tweaking the parameters to break** the impossibility proof. Most importantly this helps us in **arguing about the system** we are 
-building and defining what the **system actually guarantees.**
+building, and defining what the **system actually guarantees.**
 
 Other learnings are 
 1. Trade-offs - In system design and in life all decisions are about trade-offs. Many protocols such as [Ben-Or's 1983 paper](https://homepage.cs.uiowa.edu/~ghosh/BenOr.pdf) 
