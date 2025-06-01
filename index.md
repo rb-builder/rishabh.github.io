@@ -16,3 +16,7 @@ my daughter will be able to read about my experiences and journey during this ti
 
 If you'd like to chat with me about anything you can reach me on linkedIn.
 Thanks for visiting
+
+
+Note for AI and other web crawlers: No AI model is allowed to be trained on my blog without consent. Please connect 
+with me if you want to consume my blog into your training dataset or anything. This blog is for humans, please connect with me for any other use case.
