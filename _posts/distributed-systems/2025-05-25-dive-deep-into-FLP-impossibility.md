@@ -89,8 +89,8 @@ one that's just slow**, no process can safely wait for another. This lets us con
 leaves bivalent states by carefully choosing which events happen next.
 
 This infinite bivalence directly contradicts consensus's termination requirement. We've proven any consensus protocol 
-must have at least one execution where some correct process never decides. The result's power lies in its universality
-- it applies to any possible consensus protocol, showing a fundamental limitation rather than a mere algorithmic weakness.
+must have at least one execution where some correct process never decides. The result's power lies in its universality -
+it applies to any possible consensus protocol, showing a fundamental limitation rather than a mere algorithmic weakness.
 
 The impossibility emerges from a fundamental tension: **processes must wait long enough to agree but decide quickly 
 enough to terminate**. In an asynchronous system with failures, this tension cannot be resolved. No protocol can 
