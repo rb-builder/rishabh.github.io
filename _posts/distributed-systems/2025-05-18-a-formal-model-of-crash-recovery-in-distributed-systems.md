@@ -1,5 +1,5 @@
 ---
-title: "Getting distributed Consensus using quorum based commit protocol"
+title: "A formal model of crash recovery in distributed system"
 author: Rishabh Bhatia
 categories: [distributed-systems]
 tags: distributed systems design paper Consensus
