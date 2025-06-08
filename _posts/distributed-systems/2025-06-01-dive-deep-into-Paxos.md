@@ -78,7 +78,18 @@ On receiving an Accept(n, value) message; It will decide if it has previously pr
 - If so, it will ignore the message.
 - Else, it replies with Accepted(n, value), and also sends Accepted(n, value) to all learners.
 
-  ![Paxos-Phase 1.drawio.png](/assets/distributed%20system/paxos/Paxos-Phase%201.drawio.png)
+![Paxos-Phase 1.drawio.png](/assets/distributed%20system/paxos/Paxos-Phase%201.drawio.png)
+
+
+### Case 1 : Multiple proposers
+In this case there are multiple proposers. Lets assume there are two proposers and they have agreed on some scheme to 
+send unique numbers. For example - proposer 1 says it will send even numbers, and proposer 2 will send odd numbers.
+
+In the bellow case there are two things highlighted:
+1. Proposer times out waiting for acceptors to promise the proposal. Its a valid case and can happen if acceptor has already promised higher number. 
+2. Proposer honours the already accepted value that might have came in from other proposers. 
+
+![Paxos-Case 1 - multiple proposers.drawio.png](/assets/distributed%20system/paxos/Paxos-Case%201%20-%20multiple%20proposers.drawio.png)
 
 ## Learnings
 
