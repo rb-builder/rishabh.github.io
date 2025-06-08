@@ -1,8 +1,8 @@
 ---
-title: "Understanding Paxos"
+title: "Understanding Paxos the intuitive way"
 author: Rishabh Bhatia
 categories: [distributed-systems]
-tags: distributed systems design paper Consensus
+tags: distributed systems design paper consensus paxos
 date: 2025-05-25 05:00:00 -0700
 ---
 
@@ -42,6 +42,43 @@ There are three roles defined in paxos algorithm:
 
 Its better to understand the role by looking at the state diagram. 
 
+**Note**: Bellow is simplified version to build intuition and understand paxos the easy way. For practitioners please read the paper and implement it.
+### Phase 1 (milestone 1)
+
+**Proposer**
+Sends prepare(n = proposal number) message to at least a majority of acceptors. Proposal number "n" must be globally 
+unique, and higher then any proposal number that this proposer has used before.
+
+**Acceptor**
+On receiving  a Prepare(n) message; It will decide if it has previously promised to ignore requests with this proposal number.
+- If so, it will ignore the message.
+- Else, it now promises to ignore any request with a proposal number lower than n and replies with Promise(n, (n<sub>prev</sub>, value<sub>prev</sub>)).
+  - Note: (n<sub>prev</sub>, value<sub>prev</sub>) is optional parameter to provide info that it has previously accepted a proposed value.
+
+**Acceptor decision flow chart**    
+
+![paxos acceptor phase 1 decision flow chart.png](/assets/distributed%20system/paxos/paxos%20acceptor%20phase%201%20decision%20flow%20chart.png)
+
+**Paxos phase 1 Sequence diagram**     
+
+![Paxos-Phase 1.drawio.png](/assets/distributed%20system/paxos/Paxos-Phase%201.drawio.png)
+
+### Phase 2 (milestone 2 and 3)
+Till now Proposers has received a Promise(n) or Promise(n, (n<sub>prev</sub>, value<sub>prev</sub>)) from a majority of acceptors.
+
+**Proposer**
+Now Proposer will attempt to bring consensus on a value by sending an Accept(n, value) message to at least a majority
+of acceptors, where
+-`n` is the proposal number that was promised.
+- If Promise(n), then `value` is the actual value it wants to propose.
+- If Promise(n, (n<sub>prev</sub>, value<sub>prev</sub>)), then `value` is the `value<sub>prev</sub>` that went with the highest n<sub>prev</sub>.
+
+**Acceptor**
+On receiving an Accept(n, value) message; It will decide if it has previously promised to ignore requests with this proposal number.
+- If so, it will ignore the message.
+- Else, it replies with Accepted(n, value), and also sends Accepted(n, value) to all learners.
+
+  ![Paxos-Phase 1.drawio.png](/assets/distributed%20system/paxos/Paxos-Phase%201.drawio.png)
 
 ## Learnings
 
