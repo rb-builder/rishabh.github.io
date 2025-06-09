@@ -81,15 +81,24 @@ On receiving an Accept(n, value) message; It will decide if it has previously pr
 ![Paxos-Phase 1.drawio.png](/assets/distributed%20system/paxos/Paxos-Phase%201.drawio.png)
 
 
-### Case 1 : Multiple proposers
+### Simple scenario of multiple proposers
 In this case there are multiple proposers. Lets assume there are two proposers and they have agreed on some scheme to 
 send unique numbers. For example - proposer 1 says it will send even numbers, and proposer 2 will send odd numbers.
 
 In the bellow case there are two things highlighted:
-1. Proposer times out waiting for acceptors to promise the proposal. Its a valid case and can happen if acceptor has already promised higher number. 
+1. Proposer times out waiting for acceptors to promise the proposal. It's a valid case and can happen if acceptor has already promised higher number. 
 2. Proposer honours the already accepted value that might have came in from other proposers. 
 
 ![Paxos-Case 1 - multiple proposers.drawio.png](/assets/distributed%20system/paxos/Paxos-Case%201%20-%20multiple%20proposers.drawio.png)
+
+## Limitation
+
+1. **Dueling Proposers** - As you know from FLP Result that we cannot all three - termination, agreement and validity. 
+In Paxos algorithm we sacrificed termination. This means there can be cases where agreement is never reach, for example
+when proposer 1 and 2 keep sending higher proposal number before agreement is reached.
+2. Standard Paxos agree on one value. We can ideally modify it to make **Multi-Paxos** where we can agree on sequence of values 
+for a same agreed upon proposal number (keep on doing phase 2).
+3. We need 2f+1 acceptors to be fault tolerant.
 
 ## Learnings
 
