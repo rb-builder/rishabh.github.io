@@ -36,14 +36,20 @@ From the starting Lamport chose to solve correctness over liveliness requirement
 There are three roles defined in paxos algorithm: 
 - proposers - initiates the algorithm and proposes values, 
 - acceptors - contributes to choosing from among the proposed values, and 
-- learners - learns the agreed upon value.
-
+- learners - discovers the outcome and then act on it.
 (One process can play more than one role.)
+
+In its most general form, the protocol requires three rounds of messages, also called phases. In phase 1, a proposer 
+sends its proposal to the acceptors along with a proposal number, and acceptors return a promise to accept the proposal 
+if it has the highest proposal number of any proposal they have already received.  If a proposal receives promises from a
+majority of acceptors, then the proposer performs phase 2 in which it asks acceptors to accept the proposal and 
+indicates the specific value/action on which they are all agreeing.  When accepted by a majority of acceptors, the proposal
+becomes the consensus choice, that the accepted command is communicated to the learners in phase 3.
 
 Its better to understand the role by looking at the state diagram. 
 
 **Note**: Bellow is simplified version to build intuition and understand paxos the easy way. For practitioners please read the paper and implement it.
-### Phase 1 (milestone 1)
+### Phase 1
 
 **Proposer**
 Sends prepare(n = proposal number) message to at least a majority of acceptors. Proposal number "n" must be globally 
@@ -63,7 +69,7 @@ On receiving  a Prepare(n) message; It will decide if it has previously promised
 
 ![Paxos-Phase 1.drawio.png](/assets/distributed%20system/paxos/Paxos-Phase%201.drawio.png)
 
-### Phase 2 (milestone 2 and 3)
+### Phase 2 and 3
 Till now Proposers has received a Promise(n) or Promise(n, (n<sub>prev</sub>, value<sub>prev</sub>)) from a majority of acceptors.
 
 **Proposer**
