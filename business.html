@@ -1,14 +1,12 @@
 ---
 layout: page
-permalink: /all/
-title: All Posts
+permalink: /business/
+title: Business
 ---
 
 
-{%- if site.posts.size > 0 -%}
 <ul class="post-list">
-    {%- for post in site.posts -%}
-    {%- unless post.path contains 'archive/' or post.path contains 'business/' -%}
+    {%- for post in site.categories.business -%}
     <li>
         {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
         <span class="post-meta">{{ post.date | date: date_format }}</span>
@@ -17,12 +15,7 @@ title: All Posts
                 {{ post.title | escape }}
             </a>
         </h3>
-        {%- if site.show_excerpts -%}
         {{ post.excerpt }}
-        {%- endif -%}
     </li>
-    {%- endunless -%}
     {%- endfor -%}
 </ul>
-
-{%- endif -%}
