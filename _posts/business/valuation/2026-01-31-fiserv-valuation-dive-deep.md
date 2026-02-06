@@ -104,13 +104,16 @@ Summary from reading the above :
 4. Switching cost is their but people have asked questions like I am using X and want to switch. This means if your POS is not good, customer will switch post their contract period.
 5. Anecdotally, most questions were from restaurant owner, which makes me think that is the restaurant the biggest market for POS owners.
 
-I also asked Google AI mode Which POS to use for small restaurant owner [with 5000$ revenue/mo](https://share.google/aimode/rzTtiZ2L2KxdEQIqS)
+Thinking from business owner point of view who wont be spending too much time thinking about POS. I asked Google AI mode
+Which POS to use for small restaurant owner [with 5000$ revenue/mo](https://share.google/aimode/rzTtiZ2L2KxdEQIqS)
 or [with 10,000$ revenue/month](https://share.google/aimode/ATr0AncWh5hCaUgY5), or [with 20,000$ revenue/mo](https://share.google/aimode/VYCT7swRZAISS8fuP)
 
 Google AI suggested Square as the first option <10,000$ rev/mo with reasoning as more budget friendly option and
 Toast as best for growth or for industry specific functionalities. It switches to Toast as best option for $20k revenue. 
 
-After the research I myself would have gone with Toast. :(
+After the research for restaurant business, I myself would have gone with Toast. For retail, it would be close call and 
+would have preferred Sqaure over Clover for simple reason that I had to depend on the sales person's character as 
+compared to companies reputation. :(
 
 #### Enterprise (Carat)
 Carat is an enterprise payment orchestration and omnichannel commerce. I expect this business to be quite sticky and stable
@@ -118,14 +121,18 @@ in terms of earning and revenue. Getting new customers might be hard with tough 
 worldpay, J.P. Morgan Payments etc.
 
 ![Fiserv enterprise carat usecase.png](/assets/business/valuation/fiserv/Fiserv%20enterprise%20carat%20usecase.png)
-Source: Handholding Gemini AI, so its a probabilistic table not a deterministic one. 
+Source: Handholding Gemini AI to build above table, so its a probabilistic table not a deterministic one.
 
 To understand Carat, I need a reference point which I am more familiar with, i.e. Stripe. The following comparison can help
 understand:
 
 ![Fiserv vs stripe.png](/assets/business/valuation/fiserv/Fiserv%20vs%20stripe.png)
-Source: Handholding Gemini AI, so its a probabilistic table not a deterministic one.
+Source: Handholding Gemini AI to build above table, so its a probabilistic table not a deterministic one.
 
+
+Overall this too is a sticky business, but growth will depend on the operational quality of their software. With rise of
+Stripe which is a phenomenal product with smart founder, it will be a tough fight on growth. I checked Stripe next target
+is going after big established organizations like [church of England, Oxford, Hershey etc] (https://assets.stripeassets.com/fzn2n1nzq965/2pt3yIHthraqR1KwXgr98U/b6301040587a62d5b6ef7b76c904032d/Stripe-annual-letter-2024.pdf)
 
 ### Fiserv Financial Solutions - Dive deep
 This is the legacy product from fiserv growing at 2-3% / year. Its a bank core processor, operating in a duopoly market
@@ -140,6 +147,45 @@ with Jack Henry, serving smaller financial institutions such as community banks 
    provides customer loan and deposit account processing; digital banking; financial and risk management; professional 
    services and consulting; and check processing. For example- DNA, Finxact (Cloud Core), and XD (Digital Banking).
 
+### Conclusion - Valuation as sum of parts
+The main growth factor for Fiserv will be coming from merchant solutions business where market is quite fragmented and 
+there is a place for someone to come and fill the gap. The stability in earnings can be contributed to their Financial 
+solution business which has been sticky for decades and is quite reliable.
+
+As a hardcore engineer, my mind is wired to think about worst case scenario and problems before thinking about what to 
+solve. Here are my thoughts:
+1. Turnaround is business is easies then turning around the culture. Once the culture is gone its very hard or impossible
+to change. For last 3-4 years the previous CEO have incentivised the employees to think short term, and would assume their
+performance was tied to it. In this scenario based on personal experience - "A" players leave and "B" players stay and hire
+"C" players. That is employees responsible for doing real work will quickly gets diluted in character either through 
+employee churn or human adaptive nature. New CEO if walks the talk will have a tall order to bring back the "new better"
+culture.
+2. Quantifying lost of trust is hard, If the merchants who were burnt by using Clover or other services will work hard 
+to save/convince their community from their products. This is evident from reddit answers. New CEO will have to execute
+the hell out of it to earn the trust back.
+3. Intense competition in both the earning drivers of merchant solutions. 
+4. High switching cost, but highly dependent/directly proportional on the earning power of its clients.
+5. In high inflation environment, there will be more volume but cutting the noise is important to see margin in dollar terms.
+6. High debt and high GoodWill. 
+
+Lets first breakdown the revenue, operating earning and calculate real margins -
+
+![Fiserv sum of parts breakdown.png](/assets/business/valuation/fiserv/Fiserv%20sum%20of%20parts%20breakdown.png)
+[Fiserv sum of parts breakdown.xlsx](/assets/business/valuation/fiserv/Fiserv%20sum%20of%20parts%20breakdown.xlsx)
+
+To come with operating earning is simple = revenue - all expenses. For "Real Expenses marked as adjusted" and "adjusted
+margin" I simply got from from page 12 of the investor presentation.
+![Fiserv adjust revenue income.png](/assets/business/valuation/fiserv/Fiserv%20adjust%20revenue%20income.png)
+
+For interest expense I divided the interest payment in proportion to the revenue % of the segment.
+For income tax i used flat 18.4%.
+
+Now the valuation part
+1. Merchant solution - I see its earning ~$1.3 billion, with multiple of 10 will give valuation of $13 billion.
+2. Financial Solution - I see its earning ~$2.1 billion, with multiple of 5 will give valuation of $10 billion.
+
+**I think as a private deal I will be willing to buy the business for ~$23 billion.**
+
 ## Fiserv valuation like Aesop
 Let's go deep into converting the philosophy to practice. What we defined in philosophy is a simple present value
 calculator.
@@ -150,8 +196,7 @@ FV: Future Value
 r: Rate of return (interest rate or discount rate) per period
 n: Number of period
 ```
-
-
+![Fiserv DCF.png](/assets/business/valuation/fiserv/Fiserv%20DCF.png)
 
 ### Owner's earning
 Owner's earning is defined as the cash flows that can be distributed to owners after the business has paid all expenses
@@ -161,7 +206,7 @@ Owner Earnings = (a) Reported Earnings +
 (b) Depreciation, Depletion, Amortization, and other non-cash charges -
 (c) Average Annual Maintenance Capital Expenditures
 ```
-
+For Fiserv, its earning $3462 million in last 12 months.
 
 ### Terminal multiple
 The terminal value is an estimation of cash you get in the last year of the assumed ownership of the stock. To get the
@@ -176,8 +221,7 @@ We need to keep things simple, we can do one of the following things -
 3/ Check the historical range of the P/E of the business itself,    
 3/ too hard pile :)
 
-
-
+I simply took 10, 15, 20 as the terminal multiple.
 
 ### Discount rate
 The discount rate is essentially defining the risk you are taking while owning the stock over 10-year rate on the US Treasury.
@@ -199,7 +243,7 @@ and margin of safety (worst case). Here ideally one should write down 1 paragrap
 should future looks like to meet the defined case. The paragraph should be constructed with both risk and reward.
 Thinking about risk is critical to the story.
 
-
+I simply took 3, 4, and 5% growth using companies guidance.
 
 ### Dividend payout ratio
 Dividend payout is the percentage of a company's earnings paid to shareholders as dividends. While calculating present
@@ -208,18 +252,14 @@ value we need to add the dividend payout ratio as that earning is paid to the sh
 
 ## Inverted thinking - How much Fiserv need in revenue to justify current market pricing
 BRK has a
-1. current market cap - ~$XXX billion,
-2. net margin - ~XX%,
-3. Revenue - ~$XXX billion,
-4. Revenue Growth (last 5 years) - ~%
-5. Revenue Growth (last year) - ~%
-6. ROE - ~%
-7. Avg ROE (last 5 year) - ~%
-8. Cost of equity - ~%
+1. current market cap - ~$31 billion,
+2. net margin - ~16%,
+3. Revenue - ~$21 billion, 
+4. Avg ROE (last 5 year) - ~9.1%
 
+![Fiserv breakdown revenue.png](/assets/business/valuation/fiserv/Fiserv%20breakdown%20revenue.png)
 
-
-Now based on above break even revenue to justify market cap of ~$XXX billion is ~$XXX billion, which it already is earning.
+Now based on above break even revenue to justify market cap of ~$31 billion is ~$18 billion, which it already is earning.
 That means its fairly valued, and don't need a fairy tale to justify the earnings.
 
 [Valuation Template.xlsx](/assets/business/valuation/Valuation%20Template.xlsx)
@@ -227,6 +267,7 @@ That means its fairly valued, and don't need a fairy tale to justify the earning
 ## Reference
 - [Fiserv's PDD Moment](https://substack.com/@jingshu/p-178225485)
 - [Stripe Research](https://research.contrary.com/company/stripe)
+- [Stripe annual letter](https://assets.stripeassets.com/fzn2n1nzq965/2pt3yIHthraqR1KwXgr98U/b6301040587a62d5b6ef7b76c904032d/Stripe-annual-letter-2024.pdf)
 
 ## Disclaimer
 This is not a financial advice, and only for educational purpose.
