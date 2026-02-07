@@ -6,12 +6,16 @@ tags: business valuation Fiserv FI FISV
 date: 2026-01-31 04:00:00 -0700
 ---
 
-The best way to learn business valuation is by doing it. I am evaluating the Fiserv, INC.
+The best way to learn business valuation is by doing it. I am evaluating the Fiserv, INC using sum of parts like a 
+private business deal and using DCF.
+
+**Disclaimer**: This is not a financial advice, and only for educational purpose.
+**Note**: I have greyed out my investment framework.
+
+<span style="color: grey; font-style:italic;">
 To do this, I’ll be using two distinct frameworks:
 1. The Private Business Owner Perspective: Treating the company as a collection of individual businesses.
 2. The Aesop Framework: Using the classic "bird in the hand" proverb to determine value.
-
-**Disclaimer**: This is not a financial advice, and only for educational purpose.
 
 ## Intrinsic value
 The present value of all cash flows it can generate from now until its "judgment day" (forever), discounted back to
@@ -30,6 +34,8 @@ investment philosophy -
 1. **How certain are you** that there are birds in the bush?
 2. **When will they emerge** and how many will there be?
 3. **What is the risk-free interest rate** (the cost of waiting)?
+
+</span>
 
 ## Fiserv valuation like a private business deal
 ### Business breakdown
@@ -186,6 +192,7 @@ Now the valuation part
 
 **I think as a private deal I will be willing to buy the business for ~$23 billion.**
 
+<span style="color: grey; font-style:italic;">
 ## Fiserv valuation like Aesop
 Let's go deep into converting the philosophy to practice. What we defined in philosophy is a simple present value
 calculator.
@@ -196,9 +203,12 @@ FV: Future Value
 r: Rate of return (interest rate or discount rate) per period
 n: Number of period
 ```
+</span>
+
 ![Fiserv DCF.png](/assets/business/valuation/fiserv/Fiserv%20DCF.png)
 
 ### Owner's earning
+<span style="color: grey; font-style:italic;">
 Owner's earning is defined as the cash flows that can be distributed to owners after the business has paid all expenses
 and capital expenditures for the investment.
 ```markdown
@@ -206,9 +216,12 @@ Owner Earnings = (a) Reported Earnings +
 (b) Depreciation, Depletion, Amortization, and other non-cash charges -
 (c) Average Annual Maintenance Capital Expenditures
 ```
+</span>
+
 For Fiserv, its earning $3462 million in last 12 months.
 
 ### Terminal multiple
+<span style="color: grey; font-style:italic;">
 The terminal value is an estimation of cash you get in the last year of the assumed ownership of the stock. To get the
 estimation of selling price we can multiply the owner's earning of last year with the terminal multiple.
 
@@ -220,10 +233,12 @@ We need to keep things simple, we can do one of the following things -
 2/ Use historical range of its industry,  
 3/ Check the historical range of the P/E of the business itself,    
 3/ too hard pile :)
+</span>
 
 I simply took 10, 15, 20 as the terminal multiple.
 
 ### Discount rate
+<span style="color: grey; font-style:italic;">
 The discount rate is essentially defining the risk you are taking while owning the stock over 10-year rate on the US Treasury.
 I keep my life simple and keep it at as 10% for most of the developed country. I came around this after scanning through
 all the annual meeting and letters from Berkshire Hathaway.
@@ -232,23 +247,27 @@ If you wish you can complicate your life by learning risk free rates as taught i
 Weighted Average Cost of Capital (WACC) or cost of equity using capital Asset Pricing Model. You can watch
 [Session 4 to Session 7](https://www.youtube.com/playlist?list=PLUkh9m2BorqkgpNyRpP-NL3BS4yvFabXk). I watched it and
 decided to simplify for my use case.
+</span>
 
 I keep my life simple based on the universe of business I am looking at - 10%.
 
 ### Growth rate
+<span style="color: grey; font-style:italic;">
 For coming up with growth rate, you need to dive deep to understand the business. I have divided the growth rate into
 two buckets - 1/ first 5 years, which will be closer to current rate, 2/ 5-10 years, that will require more imagination.  
 Of-course, its impossible to predict future growth, thus we have three scenarios - normal case, exuberance (best case)
 and margin of safety (worst case). Here ideally one should write down 1 paragraph story for each case defining what
 should future looks like to meet the defined case. The paragraph should be constructed with both risk and reward.
 Thinking about risk is critical to the story.
+</span>
 
 I simply took 3, 4, and 5% growth using companies guidance.
 
 ### Dividend payout ratio
+<span style="color: grey; font-style:italic;">
 Dividend payout is the percentage of a company's earnings paid to shareholders as dividends. While calculating present
 value we need to add the dividend payout ratio as that earning is paid to the shareholder.
-
+</span>
 
 ## Inverted thinking - How much Fiserv need in revenue to justify current market pricing
 BRK has a
@@ -270,4 +289,4 @@ That means its fairly valued, and don't need a fairy tale to justify the earning
 - [Stripe annual letter](https://assets.stripeassets.com/fzn2n1nzq965/2pt3yIHthraqR1KwXgr98U/b6301040587a62d5b6ef7b76c904032d/Stripe-annual-letter-2024.pdf)
 
 ## Disclaimer
-This is not a financial advice, and only for educational purpose.
+**This is not a financial advice, and only for educational purpose.**
