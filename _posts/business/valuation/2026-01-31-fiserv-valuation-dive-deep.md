@@ -195,7 +195,8 @@ Now the valuation part
 1. Merchant solution - I see its earning ~$1.3 billion, with multiple of 10 will give valuation of $13 billion.
 2. Financial Solution - I see its earning ~$2.1 billion, with multiple of 5 will give valuation of $10 billion.
 
-**I think as a private deal I will be willing to buy the business for ~$23 billion.**
+**I think as a private deal I will be seeing the business is worth ~$23 billion and have ~30 billion of debt. Its a high
+risk and high reward kind of business with a tough job ahead for new management. It will all depend on the execution.**
 
 ## Fiserv valuation like Aesop
 <span style="color: grey; font-style:italic;">
