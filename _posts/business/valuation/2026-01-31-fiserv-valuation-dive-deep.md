@@ -9,7 +9,7 @@ date: 2026-01-31 04:00:00 -0700
 The best way to learn business valuation is by doing it. I am evaluating the Fiserv, INC using sum of parts like a 
 private business deal and using DCF.
 
-**Disclaimer**: This is not a financial advice, and only for educational purpose.
+**Disclaimer**: This is not a financial advice, and only for educational purpose.   
 **Note**: I have greyed out my investment framework.
 
 <span style="color: grey; font-style:italic;">
@@ -206,7 +206,6 @@ PV: Present Value
 FV: Future Value
 r: Rate of return (interest rate or discount rate) per period
 n: Number of period
-
 </span>
 
 ![Fiserv DCF.png](/assets/business/valuation/fiserv/Fiserv%20DCF.png)
@@ -269,7 +268,7 @@ value we need to add the dividend payout ratio as that earning is paid to the sh
 </span>
 
 ## Inverted thinking - How much Fiserv need in revenue to justify current market pricing
-BRK has a
+Fiserv has a
 1. current market cap - ~$31 billion,
 2. net margin - ~16%,
 3. Revenue - ~$21 billion, 
